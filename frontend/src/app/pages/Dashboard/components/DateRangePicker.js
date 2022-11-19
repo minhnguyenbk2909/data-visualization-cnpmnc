@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import MomentUtils from '@date-io/moment';
 import {
@@ -11,7 +11,6 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core';
-import { DataContext } from '../../../../App';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -23,53 +22,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DateRangePicker() {
-  const { setDataContext } = useContext(DataContext);
-
-  const [selectedDate, setSelectedDate] = React.useState({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
+export default function DateRangePicker({
+  type,
+  setType,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  month,
+  setMonth,
+}) {
   const classes = useStyles();
-  const [type, setType] = React.useState('date');
   const [err, setErr] = React.useState(false);
 
   const handleChange = (event) => {
     setType(event.target.value);
-    setDataContext((dataContext) => ({
-      ...dataContext,
-      selectedType: event.target.value,
-    }));
   };
   const handleStartDateChange = (date) => {
     console.log(date);
-    if (date.valueOf() > selectedDate.endDate.valueOf()) {
+    if (date.isAfter(endDate)) {
       setErr(true);
       return;
     }
-    setSelectedDate((prev) => ({ ...prev, startDate: date }));
+    setStartDate(date);
     setErr(false);
-    setDataContext((dataContext) => ({
-      ...dataContext,
-      selectedDate: { ...dataContext.selectedDate, startDate: date },
-    }));
   };
   const handleEndDateChange = (date) => {
     // console.log(date.format("DD/MM/yyyy"));
-    if (date.valueOf() < selectedDate.startDate.valueOf()) {
+    if (date.isBefore(startDate)) {
       setErr(true);
       return;
     }
-    setSelectedDate((prev) => ({ ...prev, endDate: date }));
+    setEndDate(date);
     setErr(false);
-    setDataContext((dataContext) => ({
-      ...dataContext,
-      selectedDate: { ...dataContext.selectedDate, endDate: date },
-    }));
   };
   const handleMonthChange = (date) => {
-    console.log(date.format('MM/yyyy'));
-    setSelectedDate(date);
+    console.log(date.format('MM-yyyy'));
+    setMonth(date);
   };
 
   return (
@@ -95,11 +84,11 @@ export default function DateRangePicker() {
             <KeyboardDatePicker
               disableToolbar
               variant='inline'
-              format='DD/MM/yyyy'
+              format='DD-MM-YYYY'
               margin='normal'
               id='date-picker-inline'
               label='Date'
-              value={selectedDate.startDate}
+              value={startDate}
               onChange={handleStartDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
@@ -108,11 +97,11 @@ export default function DateRangePicker() {
             <KeyboardDatePicker
               disableToolbar
               variant='inline'
-              format='DD/MM/yyyy'
+              format='DD-MM-YYYY'
               margin='normal'
               id='date-picker-inline'
               label='Date'
-              value={selectedDate.endDate}
+              value={endDate}
               onChange={handleEndDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
@@ -132,7 +121,7 @@ export default function DateRangePicker() {
             views={['year', 'month']}
             label='Year and Month'
             helperText='Start from year selection'
-            value={selectedDate}
+            value={month}
             onChange={handleMonthChange}
           />
         )}

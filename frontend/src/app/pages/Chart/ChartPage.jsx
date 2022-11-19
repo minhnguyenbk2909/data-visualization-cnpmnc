@@ -1,9 +1,7 @@
 import { Box, Typography } from '@material-ui/core';
 import { Chart } from './Chart';
 
-export const ChartPage = () => {
-  const country = 'Vietnam';
-
+export const ChartPage = ({ type, startDate, endDate, country }) => {
   return (
     <Box
       sx={{
@@ -15,10 +13,10 @@ export const ChartPage = () => {
     >
       <Box
         sx={{
-          width: '100%',
+          width: '40%',
           border: '1px solid #009df0',
           borderRadius: 4,
-          boxShadow: '0px 3px 5px #333333',
+          boxShadow: '0px 2px 5px #333333',
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'center',
@@ -29,8 +27,12 @@ export const ChartPage = () => {
       >
         COVID Cases in {country}
       </Box>
-      <Typography>TODO: RANGE PICKER</Typography>
-      <Chart country={country} />
+      <Chart
+        type={type}
+        startDate={startDate}
+        endDate={endDate}
+        country={country}
+      />
     </Box>
   );
 };

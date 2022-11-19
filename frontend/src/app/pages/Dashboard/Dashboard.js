@@ -2,6 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import DateRangePicker from './components/DateRangePicker';
+import { Box } from '@material-ui/core';
+import { CountrySelect } from './components/CountrySelect';
 
 const useStyles = makeStyles({
   root: {
@@ -15,7 +17,32 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Dashboard() {
+export default function Dashboard({
+  type,
+  setType,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  month,
+  setMonth,
+  country,
+  setCountry,
+}) {
   const classes = useStyles();
-  return <DateRangePicker />;
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+      <DateRangePicker
+        type={type}
+        setType={setType}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        month={month}
+        setMonth={setMonth}
+      />
+      <CountrySelect country={country} setCountry={setCountry} />
+    </Box>
+  );
 }

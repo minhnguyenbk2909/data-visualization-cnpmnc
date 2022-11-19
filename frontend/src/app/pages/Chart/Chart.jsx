@@ -8,14 +8,19 @@
 //   Tooltip,
 //   Legend,
 // } from 'chart.js';
-import { Box, Button } from '@material-ui/core';
-import { useState } from 'react';
+import { Box } from '@material-ui/core';
+import { useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 // import moment from 'moment';
 // import 'chartjs-adapter-moment';
+import axios from 'axios';
 
 export const Chart = ({ country }) => {
-  const [selectedCountry, setSelectedCountry] = useState(country);
+  useEffect(() => {
+    (async () => {
+      // console.log(await axios.get('/api/statistic-data?'));
+    })();
+  }, []);
 
   const options = {
     responsive: true,
@@ -25,7 +30,7 @@ export const Chart = ({ country }) => {
       },
       title: {
         display: true,
-        text: `COVID Cases in ${selectedCountry}`,
+        text: `COVID Cases in ${country}`,
       },
     },
   };
@@ -124,14 +129,16 @@ export const Chart = ({ country }) => {
     },
   };
 
-  const handleClickChangeCountry = () => {
-    setSelectedCountry('USA');
-  };
-
   return (
-    <Box sx={{ width: '80%', border: '1px solid blue', borderRadius: 4 }}>
-      <Button onClick={handleClickChangeCountry}>Change Country</Button>
-      <Line options={options} data={data[selectedCountry]} />
+    <Box
+      sx={{
+        width: '80%',
+        padding: 20,
+        border: '1px solid blue',
+        borderRadius: 4,
+      }}
+    >
+      <Line options={options} data={data[country]} />
     </Box>
   );
 };
