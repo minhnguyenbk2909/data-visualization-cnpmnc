@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const moment = require('moment');
+
 const countryNames = require("../constant/countries");
 
 function dayConvert(date) {
@@ -66,5 +68,16 @@ router.get("/country-names", async (req, res) => {
 router.get("/:date", async (req, res) => {
   res.send(await ctrl.getDate(req.params));
 });
+
+router.get('/statistic-top', (req, res, next) => {
+  const { from, to } = req.query;
+  var fromDate = moment(from, 'DD/MM/YYYY');
+  var toDate = moment(to, 'DD/MM/YYYY');
+  while(toDate.diff(fromDate, 'days', true) >= 0) {
+
+    fromDate.add(1, 'day');
+  }
+  res.status(200).send("done");
+})
 
 module.exports = router;
