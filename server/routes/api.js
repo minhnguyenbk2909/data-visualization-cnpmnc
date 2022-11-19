@@ -1,14 +1,23 @@
 const router = require("express").Router();
 const countryNames = require("../constant/countries");
 
+function dayConvert(date) {
+  // Convert string "dd-mm-yyyy" to "mm-dd-yyyy"
+  let parts = date.split("-");
+  return `${parts[1]}-${parts[0]}-${parts[2]}`;
+}
+
+function dateAdapter(date) {
+  // Convert "dd-mm-yyyy" to Date instance
+  let parts = date.split("-");
+  return new Date(parts[2], parts[1] - 1, parts[0]);
+}
+
 const ctrl = require("../controllers/api.controller");
 
 router.get("/data/daily/:date", async (req, res) => {
-  let date = req.params.date;
-  let parts = date.split("-");
-  date = `${parts[1]}-${parts[0]}-${parts[2]}`;
   let country = req.query.country;
-  let data = await ctrl.getByDate(date);
+  let data = await ctrl.getByDate(dayConvert(req.params.date));
   if (!country) {
     res.send(data);
   } else {
@@ -24,15 +33,17 @@ router.get("/statistic-data", async (req, res) => {
   3) Merge on output
   */
   let from = req.query.from;
-  let parts = from.split("-");
-  let fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
   let to = req.query.to;
-  parts = to.split("-");
-  let toDate = new Date(parts[2], parts[1] - 1, parts[0]);
+  let fromDate = new Date(dayConvert(from));
+  let toDate = new Date(dayConvert(to));
   let country = req.query.country;
   const dayFiles = [];
   var day_count = (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
   console.log(`Days between: ${day_count}`);
+  for (let i = 0; i < 3; i++) {
+    let data = await ctrl.getByDate(dayConvert(from));
+    console.log(data.find((x) => x.Country_Region == country));
+  }
   res.send(":)");
 });
 
