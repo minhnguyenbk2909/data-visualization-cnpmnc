@@ -1,5 +1,3 @@
-const csvp = require("csv-parser");
-const fs = require("fs");
 const axios = require("axios");
 const csv = require("../../utils/csvToJson");
 class ApiController {
@@ -16,13 +14,13 @@ class ApiController {
   }
 
   async getByMonth(month) {
-    const promiseArr = []
+    const promiseArr = [];
     for (let i = 1; i <= 31; i++) {
-        promiseArr.push(
-          axios.get(
-            `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`
-          )
-        );
+      promiseArr.push(
+        axios.get(
+          `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`
+        )
+      );
     }
   }
 }
