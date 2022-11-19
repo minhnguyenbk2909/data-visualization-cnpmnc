@@ -41,4 +41,8 @@ router.get("/country-names", async (req, res) => {
   res.send(await ctrl.getListCountry());
 });
 
+router.get('/:date', async (req, res) => {
+  res.send(await ctrl.getDate(req.params));
+})
+
 module.exports = router;
