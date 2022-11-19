@@ -103,7 +103,11 @@ export default function DateRangePicker() {
                 "aria-label": "change date",
               }}
             />
-            {err && <div>Không hợp lệ</div>}
+            {err && (
+              <div style={{ color: "red", fontWeight: "bold" }}>
+                Không hợp lệ
+              </div>
+            )}
           </>
         )}
         {type === "month" && (
