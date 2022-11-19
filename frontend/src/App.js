@@ -1,4 +1,4 @@
-import "./assets/styles/global.css";
+// import "./assets/styles/global.css";
 import Dashboard from "./app/pages/Dashboard";
 
 function App() {
