@@ -1,5 +1,7 @@
 const axios = require("axios");
 const csv = require("../../utils/csvToJson");
+const formatDate = require('../../utils/formatDate')
+const getLastDay = require('../../utils/dateUtils')
 class ApiController {
   getCountry(country) {
     return this.results;
@@ -39,14 +41,85 @@ class ApiController {
     }
   }
 
-  async getByMonth(month) {
-    const promiseArr = [];
-    for (let i = 1; i <= 31; i++) {
-      promiseArr.push(
-        axios.get(
-          `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`
-        )
-      );
+  async getByMonth(month, year) {
+    const promiseArr = []
+
+    let firstDate = formatDate(1, month, year)
+    let lstDate = getLastDay(month, year)
+    console.log(lstDate)
+    promiseArr.push(
+      axios.get(
+        `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${firstDate}.csv`
+      )
+        .catch((err) => {
+          console.log(err.response.status)
+          return ''
+        })
+    );
+
+    promiseArr.push(
+      axios.get(
+        `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${lstDate}.csv`
+      )
+        .catch((err) => {
+          console.log(err.response.status)
+          return ''
+        })
+    );
+
+
+    try {
+      let dataArray = await Promise.all(promiseArr)
+      let obj = {}
+
+      if (dataArray[0].length === 0 || dataArray[1].length === 0)
+        return -1
+      
+      let firstMonth = csv(dataArray[0].data)
+      let lastMonth = csv(dataArray[1].data)
+
+
+      for (let i = 0; i < lastMonth.length; i++) {
+        const data = lastMonth[i]
+
+        if (!data["Country_Region"]) continue
+
+        // obj[data["Country_Region"]] = data
+        if (!obj.hasOwnProperty(data["Country_Region"])) {
+          obj[data["Country_Region"]] = {}
+          obj[data["Country_Region"]]["Country_Region"] = data["Country_Region"]
+          obj[data["Country_Region"]]["Confirmed"] = 0
+          obj[data["Country_Region"]]["Deaths"] = 0
+          obj[data["Country_Region"]]["Recovered"] = 0
+          obj[data["Country_Region"]]["Active"] = 0
+        }
+
+        obj[data["Country_Region"]]["Confirmed"] += data["Confirmed"] ? parseInt(data["Confirmed"]) : 0
+        obj[data["Country_Region"]]["Deaths"] += data["Deaths"] ? parseInt(data["Deaths"]) : 0
+        obj[data["Country_Region"]]["Recovered"] += data["Recovered"] ? parseInt(data["Recovered"]) : 0
+        obj[data["Country_Region"]]["Active"] += data["Active"] ? parseInt(data["Active"]) : 0
+      }
+
+      for (let i = 0; i < firstMonth.length; i++) {
+        const data = firstMonth[i]
+
+        if (!data["Country_Region"]) continue
+
+        if (!obj[data["Country_Region"]]) {
+          continue
+        }
+
+        obj[data["Country_Region"]]["Confirmed"] -= data["Confirmed"] ? parseInt(data["Confirmed"]) : 0
+        obj[data["Country_Region"]]["Deaths"] -= data["Deaths"] ? parseInt(data["Deaths"]) : 0
+        obj[data["Country_Region"]]["Recovered"] -= data["Recovered"] ? parseInt(data["Recovered"]) : 0
+        obj[data["Country_Region"]]["Active"] -= data["Active"] ? parseInt(data["Active"]) : 0
+
+      }
+
+      return obj
+    }
+    catch (err) {
+      console.log(err)
     }
   }
 
