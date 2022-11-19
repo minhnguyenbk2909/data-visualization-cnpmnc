@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const moment = require('moment');
+const moment = require("moment");
 
 const countryNames = require("../constant/countries");
 
@@ -39,13 +39,21 @@ router.get("/statistic-data", async (req, res) => {
   let fromDate = new Date(dayConvert(from));
   let toDate = new Date(dayConvert(to));
   let country = req.query.country;
-  const dayFiles = [];
+  let statisticData = [];
   var day_count = (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
   console.log(`Days between: ${day_count}`);
   for (let i = 0; i < 3; i++) {
     let data = await ctrl.getByDate(dayConvert(from));
-    console.log(data.find((x) => x.Country_Region == country));
+    let country_data = data.find((x) => x.Country_Region == country);
+    let res_obj = {
+      dateTime: 0,
+      newCases: country_data.Confirmed,
+      deaths: country_data.Deaths,
+      recovered: country_data.Recovered,
+    };
+    statisticData.push(res_obj);
   }
+  console.log(statisticData);
   res.send(":)");
 });
 
@@ -69,15 +77,14 @@ router.get("/:date", async (req, res) => {
   res.send(await ctrl.getDate(req.params));
 });
 
-router.get('/statistic-top', (req, res, next) => {
+router.get("/statistic-top", (req, res, next) => {
   const { from, to } = req.query;
-  var fromDate = moment(from, 'DD/MM/YYYY');
-  var toDate = moment(to, 'DD/MM/YYYY');
-  while(toDate.diff(fromDate, 'days', true) >= 0) {
-
-    fromDate.add(1, 'day');
+  var fromDate = moment(from, "DD/MM/YYYY");
+  var toDate = moment(to, "DD/MM/YYYY");
+  while (toDate.diff(fromDate, "days", true) >= 0) {
+    fromDate.add(1, "day");
   }
   res.status(200).send("done");
-})
+});
 
 module.exports = router;
