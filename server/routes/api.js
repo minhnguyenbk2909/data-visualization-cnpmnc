@@ -17,12 +17,24 @@ router.get("/data/daily", async (req, res) => {
   }
 });
 
-router.get("/data/filter", async (req, res) => {
+router.get("/statistic-data", async (req, res) => {
   // W.I.P
+  /*
+  1) Get all daily files corresponds to each day
+  2) Filter one country on each file
+  3) Merge on output
+  */
   let from = req.query.from;
+  var parts = from.split("-");
+  fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
   let to = req.query.to;
+  parts = to.split("-");
+  toDate = new Date(parts[2], parts[1] - 1, parts[0]);
   let country = req.query.country;
-  res.send(`Filter from ${from} to ${to} of ${country}`);
+  const dayFiles = [];
+  var day_count = (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
+  console.log(`Days between: ${day_count}`);
+  res.send(":)");
 });
 
 router.get("/country-names", (req, res, next) => {
@@ -40,5 +52,9 @@ router.get("/data/country", async (req, res) => {
 router.get("/country-names", async (req, res) => {
   res.send(await ctrl.getListCountry());
 });
+
+router.get('/:date', async (req, res) => {
+  res.send(await ctrl.getDate(req.params));
+})
 
 module.exports = router;
