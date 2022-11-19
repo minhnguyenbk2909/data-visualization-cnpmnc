@@ -45,4 +45,16 @@ router.get("/country-names", (req, res, next) => {
   res.status(200).send(JSON.stringify(responseData));
 });
 
+router.get("/data/country", async (req, res) => {
+  res.send(await ctrl.getByCountry());
+});
+
+router.get("/country-names", async (req, res) => {
+  res.send(await ctrl.getListCountry());
+});
+
+router.get('/:date', async (req, res) => {
+  res.send(await ctrl.getDate(req.params));
+})
+
 module.exports = router;

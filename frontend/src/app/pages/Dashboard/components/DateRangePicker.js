@@ -29,17 +29,28 @@ export default function DateRangePicker() {
   });
   const classes = useStyles();
   const [type, setType] = React.useState("date");
+  const [err, setErr] = React.useState(false);
 
   const handleChange = (event) => {
     setType(event.target.value);
   };
   const handleStartDateChange = (date) => {
-    // console.log(date.format("DD/MM/yyyy"));
+    console.log(date);
+    if (date.valueOf() > selectedDate.endDate.valueOf()) {
+      setErr(true);
+      return;
+    }
     setSelectedDate((prev) => ({ ...prev, startDate: date }));
+    setErr(false);
   };
   const handleEndDateChange = (date) => {
     // console.log(date.format("DD/MM/yyyy"));
+    if (date.valueOf() < selectedDate.startDate.valueOf()) {
+      setErr(true);
+      return;
+    }
     setSelectedDate((prev) => ({ ...prev, endDate: date }));
+    setErr(false);
   };
   const handleMonthChange = (date) => {
     console.log(date.format("MM/yyyy"));
@@ -92,6 +103,7 @@ export default function DateRangePicker() {
                 "aria-label": "change date",
               }}
             />
+            {err && <div>Không hợp lệ</div>}
           </>
         )}
         {type === "month" && (
