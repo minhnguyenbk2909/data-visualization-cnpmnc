@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import DateRangePicker from "./components/DateRangePicker";
 
 const useStyles = makeStyles({
   root: {
@@ -16,5 +17,5 @@ const useStyles = makeStyles({
 
 export default function Dashboard() {
   const classes = useStyles();
-  return <Button className={classes.root}>Dashboard</Button>;
+  return <DateRangePicker />;
 }
