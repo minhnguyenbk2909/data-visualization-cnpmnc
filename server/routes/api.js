@@ -3,11 +3,10 @@ const countryNames = require("../constant/countries");
 
 const ctrl = require("../controllers/api.controller");
 
-router.get("/data/daily", async (req, res) => {
-  let day = req.query.day;
-  let month = req.query.month;
-  let year = req.query.year;
-  let date = `${month}-${day}-${year}`;
+router.get("/data/daily/:date", async (req, res) => {
+  let date = req.params.date;
+  let parts = date.split("-");
+  date = `${parts[1]}-${parts[0]}-${parts[2]}`;
   let country = req.query.country;
   let data = await ctrl.getByDate(date);
   if (!country) {
@@ -25,11 +24,11 @@ router.get("/statistic-data", async (req, res) => {
   3) Merge on output
   */
   let from = req.query.from;
-  var parts = from.split("-");
-  fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
+  let parts = from.split("-");
+  let fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
   let to = req.query.to;
   parts = to.split("-");
-  toDate = new Date(parts[2], parts[1] - 1, parts[0]);
+  let toDate = new Date(parts[2], parts[1] - 1, parts[0]);
   let country = req.query.country;
   const dayFiles = [];
   var day_count = (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
@@ -53,8 +52,8 @@ router.get("/country-names", async (req, res) => {
   res.send(await ctrl.getListCountry());
 });
 
-router.get('/:date', async (req, res) => {
+router.get("/:date", async (req, res) => {
   res.send(await ctrl.getDate(req.params));
-})
+});
 
 module.exports = router;
