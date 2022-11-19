@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const countryNames = require("../constant/countries");
 
 const ctrl = require("../controllers/api.controller");
 
@@ -17,5 +18,13 @@ router.get("/data/filter", async (req, res) => {
   let country = req.query.country;
   res.send(`Filter from ${from} to ${to} of ${country}`);
 });
+
+router.get('/country-names', (req, res, next) => {
+  const responseData = {
+    statusCode: 0,
+    countryNames: countryNames
+  }
+  res.status(200).send(JSON.stringify(responseData));
+})
 
 module.exports = router;
