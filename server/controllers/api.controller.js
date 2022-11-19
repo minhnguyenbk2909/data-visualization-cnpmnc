@@ -50,8 +50,30 @@ class ApiController {
     }
   }
 
-  async getDate(req) {
-    req.forma
+  getWeekDays(date) {
+    //const date = new Date();
+
+    const first = date.getDate() - date.getDay() + 1;
+    const last = first + 6;
+
+    const firstDay = new Date(date.setDate(first)); //.toUTCString();
+    const lastDay = new Date(date.setDate(last)); //.toUTCString();
+
+    return firstDay;
+
+    // console.log("First: ", firstDay);
+    // console.log("Last: ", lastDay);
+  }
+
+  async countryFilter(date) {
+
+    const dateObject = moment(from, "DD/MM/YYYY").tz("Asia/Ho_Chi_Minh").format();
+
+    console.log("Current: ", dateObject)
+    // const firstDay = this.getWeekDays(dateObject);
+    
+    // console.log("Current: ", dateObject)
+    // console.log("First day: ", firstDay)
   }
 }
 

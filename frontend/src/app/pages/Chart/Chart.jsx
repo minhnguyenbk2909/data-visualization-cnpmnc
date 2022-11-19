@@ -131,7 +131,7 @@ export const Chart = ({ country }) => {
   return (
     <Box sx={{ width: '80%', border: '1px solid blue', borderRadius: 4 }}>
       <Button onClick={handleClickChangeCountry}>Change Country</Button>
-      <Line options={options} data={data} />
+      <Line options={options} data={data[selectedCountry]} />
     </Box>
   );
 };
