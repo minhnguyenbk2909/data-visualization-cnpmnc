@@ -23,16 +23,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function DateRangePicker() {
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
   const classes = useStyles();
   const [type, setType] = React.useState("date");
 
   const handleChange = (event) => {
     setType(event.target.value);
   };
-  const handleDateChange = (date) => {
-    console.log(date.format("DD/MM/yyyy"));
-    setSelectedDate(date);
+  const handleStartDateChange = (date) => {
+    // console.log(date.format("DD/MM/yyyy"));
+    setSelectedDate((prev) => ({ ...prev, startDate: date }));
+  };
+  const handleEndDateChange = (date) => {
+    // console.log(date.format("DD/MM/yyyy"));
+    setSelectedDate((prev) => ({ ...prev, endDate: date }));
   };
   const handleMonthChange = (date) => {
     console.log(date.format("MM/yyyy"));
@@ -58,19 +65,34 @@ export default function DateRangePicker() {
           </Select>
         </FormControl>
         {type === "date" && (
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="DD/MM/yyyy"
-            margin="normal"
-            id="date-picker-inline"
-            label="Date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change date",
-            }}
-          />
+          <>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="DD/MM/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Date"
+              value={selectedDate.startDate}
+              onChange={handleStartDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
+            />
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="DD/MM/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Date"
+              value={selectedDate.endDate}
+              onChange={handleEndDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
+            />
+          </>
         )}
         {type === "month" && (
           <DatePicker
