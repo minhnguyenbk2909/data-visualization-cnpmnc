@@ -15,7 +15,9 @@ class ApiController {
       .on("data", (data) => this.results.push(data));
   }
 
-  getCountry(country) {}
+  getCountry(country) {
+    return this.results;
+  }
 }
 
 const ac = new ApiController();
