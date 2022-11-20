@@ -87,4 +87,9 @@ router.get("/statistic-top", (req, res, next) => {
   res.status(200).send("done");
 });
 
+router.get("/statistic-data/v2/", async (req, res) => {
+  const data = await ctrl.filterByCountry(req);
+  res.send(data);
+});
+
 module.exports = router;

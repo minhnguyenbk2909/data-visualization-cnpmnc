@@ -2,6 +2,7 @@ const axios = require("axios");
 const csv = require("../../utils/csvToJson");
 const formatDate = require('../../utils/formatDate')
 const getLastDay = require('../../utils/dateUtils')
+const moment = require("moment")
 class ApiController {
   getCountry(country) {
     return this.results;
@@ -124,8 +125,6 @@ class ApiController {
   }
 
   getWeekDays(date) {
-    //const date = new Date();
-
     const first = date.getDate() - date.getDay() + 1;
     const last = first + 6;
 
@@ -133,20 +132,36 @@ class ApiController {
     const lastDay = new Date(date.setDate(last)); //.toUTCString();
 
     return firstDay;
-
-    // console.log("First: ", firstDay);
-    // console.log("Last: ", lastDay);
   }
 
-  async countryFilter(date) {
+  async filterByCountry(req) {
 
-    const dateObject = moment(from, "DD/MM/YYYY").tz("Asia/Ho_Chi_Minh").format();
+    const promiseArr = [];
+    const result = [];
+    let from = req.query.from;
+    let parts = from.split("-");
+    let fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    let to = req.query.to;
+    parts = to.split("-");
+    let toDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    let day_count = (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
+    let country = req.query.country;
+    let request = req.query.request || null;
 
-    console.log("Current: ", dateObject)
-    // const firstDay = this.getWeekDays(dateObject);
+    for (let day = fromDate; day <= toDate; day = moment(day).add(1, 'days')){
+      //console.log(moment(day).format('MM-DD-YYYY'))
+      promiseArr.push(this.getByDate(moment(day).format('MM-DD-YYYY')))
+    }
+
+    const registrations = await Promise.all(promiseArr).then(values => {
+      for (let i = 0; i <= day_count; i++) {
+        let item = values[i].find((x) => x.Country_Region == country);
+        if (request) item = item[`${request}`]
+        result.push(item)
+      }
+    })
     
-    // console.log("Current: ", dateObject)
-    // console.log("First day: ", firstDay)
+    return result;
   }
 }
 
