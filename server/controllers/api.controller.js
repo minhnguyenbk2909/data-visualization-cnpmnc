@@ -158,10 +158,10 @@ class ApiController {
         let item = values[i].find((x) => x.Country_Region == country);
         const newItem = new Object();
         newItem.dateTime = item.Last_Update;
-        newItem.newCases = item.Confirmed;
+        newItem.newCases = item.Active;
         newItem.deaths = item.Deaths;
         newItem.recovered = item.Recovered;
-        result.push(newItem)
+        result.push(item)
       }
     })
     
