@@ -17,7 +17,7 @@ export const CountrySelect = ({ country, setCountry }) => {
   };
 
   return (
-    <FormControl fullWidth>
+    <FormControl>
       <InputLabel>Country</InputLabel>
       <Select value={country} label='Country' onChange={handleChange}>
         {countryNames.map((countryName) => (

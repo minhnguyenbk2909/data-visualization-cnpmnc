@@ -39,7 +39,7 @@ export default function DateRangePicker({
     setType(event.target.value);
   };
   const handleStartDateChange = (date) => {
-    console.log(date);
+    // console.log(date);
     if (date.isAfter(endDate)) {
       setErr(true);
       return;

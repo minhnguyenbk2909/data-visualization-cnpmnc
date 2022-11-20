@@ -5,17 +5,18 @@ import { ChartPage } from './app/pages/Chart/ChartPage';
 import Dashboard from './app/pages/Dashboard';
 
 import axios from 'axios';
+import { Box } from '@material-ui/core';
 axios.defaults.baseURL = 'http://localhost:4000';
 
 function App() {
   const [type, setType] = useState('date'); // "date", "month"
-  const [startDate, setStartDate] = useState(moment()); // moment object; format: DD-MM-YYYY
-  const [endDate, setEndDate] = useState(moment()); // moment object; format: DD-MM-YYYY
+  const [startDate, setStartDate] = useState(moment().subtract(2, 'days')); // moment object; format: DD-MM-YYYY
+  const [endDate, setEndDate] = useState(moment().subtract(1, 'days')); // moment object; format: DD-MM-YYYY
   const [month, setMonth] = useState(''); // moment object; format: MM-YYYY
   const [country, setCountry] = useState('Vietnam');
 
   return (
-    <div className='App'>
+    <Box sx={{ backgroundColor: '#e8e8ff' }}>
       <Dashboard
         type={type}
         setType={setType}
@@ -34,7 +35,7 @@ function App() {
         endDate={endDate}
         country={country}
       />
-    </div>
+    </Box>
   );
 }
 
