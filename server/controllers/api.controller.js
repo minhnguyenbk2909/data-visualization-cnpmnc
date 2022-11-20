@@ -156,8 +156,12 @@ class ApiController {
     const registrations = await Promise.all(promiseArr).then(values => {
       for (let i = 0; i <= day_count; i++) {
         let item = values[i].find((x) => x.Country_Region == country);
-        if (request) item = item[`${request}`]
-        result.push(item)
+        const newItem = new Object();
+        newItem.dateTime = item.Last_Update;
+        newItem.newCases = item.Confirmed;
+        newItem.deaths = item.Deaths;
+        newItem.recovered = item.Recovered;
+        result.push(newItem)
       }
     })
     
