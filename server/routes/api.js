@@ -73,9 +73,11 @@ router.get("/country-names", async (req, res) => {
   res.send(await ctrl.getListCountry());
 });
 
+/*
 router.get("/:date", async (req, res) => {
   res.send(await ctrl.getDate(req.params));
 });
+*/
 
 router.get("/statistic-top", (req, res, next) => {
   const { from, to } = req.query;
@@ -87,13 +89,25 @@ router.get("/statistic-top", (req, res, next) => {
   res.status(200).send("done");
 });
 
-router.get("/statistic-data/v2/", async (req, res) => {
+router.get("/statistic-data/v2", async (req, res) => {
   const responseData = {
     statusCode: 0,
     statusDescription: "Success",
     statisticData: await ctrl.filterByCountry(req),
   };
-  res.status(200).send((responseData));
+  res.status(200).send(responseData);
+});
+
+router.get("/compare", async (req, res) => {
+  let c1 = req.query.country1,
+    c2 = req.query.country2,
+    time = req.query.time;
+  const resData = {
+    statusCode: 0,
+    statusDescription: "Success",
+    statisticData: await ctrl.compareCountries(c1, c2, time),
+  };
+  res.send(resData);
 });
 
 module.exports = router;
