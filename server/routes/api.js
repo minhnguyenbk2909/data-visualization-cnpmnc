@@ -95,7 +95,7 @@ router.get("/statistic-data/v2", async (req, res) => {
     statusDescription: "Success",
     statisticData: await ctrl.filterByCountry(req),
   };
-  res.status(200).send(responseData);
+  res.status(200).send(JSON.stringify(responseData));
 });
 
 router.get("/compare", async (req, res) => {
