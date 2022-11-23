@@ -204,7 +204,6 @@ class ApiController {
       }
     }
     */
-    console.log(c1_data, c2_data);
     const result = {
       Date: time,
       "Country 1": {
