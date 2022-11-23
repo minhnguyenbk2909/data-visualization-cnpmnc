@@ -1,8 +1,7 @@
 const axios = require("axios");
 const csv = require("../../utils/csvToJson");
-const formatDate = require("../../utils/formatDate");
-const getLastDay = require("../../utils/dateUtils");
-const moment = require("moment");
+const { formatDate, lastDayofMonth } = require('../../utils/dateUtils')
+const moment = require('moment')
 class ApiController {
   getCountry(country) {
     return this.results;
@@ -43,41 +42,34 @@ class ApiController {
   }
 
   async getByMonth(month, year) {
-    const promiseArr = [];
 
-    let firstDate = formatDate(1, month, year);
-    let lstDate = getLastDay(month, year);
-    console.log(lstDate);
-    promiseArr.push(
-      axios
-        .get(
-          `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${firstDate}.csv`
-        )
-        .catch((err) => {
-          console.log(err.response.status);
-          return "";
-        })
-    );
+    let firstDate = formatDate(1, month, year)
+    let lstDate = lastDayofMonth(month, year)
 
-    promiseArr.push(
-      axios
-        .get(
-          `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${lstDate}.csv`
-        )
-        .catch((err) => {
-          console.log(err.response.status);
-          return "";
-        })
-    );
+    const promiseArr = [
+      axios.get(
+        `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${firstDate}.csv`
+      )
+      ,
+      axios.get(
+        `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${lstDate}.csv`
+      )
+      ];
 
     try {
-      let dataArray = await Promise.all(promiseArr);
-      let obj = {};
+      let dataArray = await Promise.all(promiseArr
+        .map(p => p.catch((err) => {
+          console.log(err.response.status)
+          return ''
+        })))
 
-      if (dataArray[0].length === 0 || dataArray[1].length === 0) return -1;
+      let obj = {}
 
-      let firstMonth = csv(dataArray[0].data);
-      let lastMonth = csv(dataArray[1].data);
+      if (dataArray[0].length === 0 || dataArray[1].length === 0)
+        return -1
+
+      let firstMonth = csv(dataArray[0].data)
+      let lastMonth = csv(dataArray[1].data)
 
       for (let i = 0; i < lastMonth.length; i++) {
         const data = lastMonth[i];

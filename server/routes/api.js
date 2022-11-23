@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const moment = require("moment");
+const { isMonth, isYear } = require("../../utils/dateUtils");
 
 const countryNames = require("../constant/countries");
 
@@ -15,7 +16,7 @@ function dateAdapter(date) {
   return new Date(parts[2], parts[1] - 1, parts[0]);
 }
 
-const ctrl = require("../controllers/api.controller");
+const ctrl = require("../controllers/api.controller")
 
 router.get("/data/daily/:date", async (req, res) => {
   let country = req.query.country;
@@ -109,5 +110,37 @@ router.get("/compare", async (req, res) => {
   };
   res.send(resData);
 });
+router.get("/data/monthly", async (req, res, next) => {
+  const { month, year } = req.query
+
+  if (!month || !year) {
+    return res.status(400).json({
+      statusCode: 3,
+      statusDescription: "Invalid query"
+    })
+  }
+
+  if (!isMonth(month) || !isYear(year))
+    return res.status(400).json({
+      statusCode: 3,
+      statusDescription: "Invalid date format"
+    })
+
+
+  const data = await ctrl.getByMonth(month, year)
+
+  if (data === -1) {
+    return res.status(404).json({
+      statusCode: 2,
+      statusDescription: 'Date record not existed in DB'
+    })
+  }
+
+  return res.status(200).json({
+    statusCode: 0,
+    statusDescription: 'Success',
+    data: data
+  })
+})
 
 module.exports = router;
