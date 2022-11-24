@@ -50,7 +50,7 @@ const convertStatisticDataToChartDatasets = (statisticData) => {
   };
 };
 
-export const Chart = ({ type, startDate, endDate, country }) => {
+export const ByCountryChart = ({ type, startDate, endDate, country }) => {
   const [chartData, setChartData] = useState({ datasets: [] });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -91,7 +91,7 @@ export const Chart = ({ type, startDate, endDate, country }) => {
     <Box
       sx={{
         width: '90%',
-        height: 2500,
+        // height: 400,
         padding: 20,
         border: '1px solid blue',
         borderRadius: 4,

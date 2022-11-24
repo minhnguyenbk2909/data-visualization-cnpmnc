@@ -1,7 +1,7 @@
 import { Box, Typography } from '@material-ui/core';
-import { Chart } from './Chart';
+import { ByCountryChart } from './ByCountryChart';
 
-export const ChartPage = ({ type, startDate, endDate, country }) => {
+export const ByCountry = ({ type, startDate, endDate, country }) => {
   return (
     <Box
       sx={{
@@ -29,7 +29,7 @@ export const ChartPage = ({ type, startDate, endDate, country }) => {
       >
         COVID Cases in {country}
       </Box>
-      <Chart
+      <ByCountryChart
         type={type}
         startDate={startDate}
         endDate={endDate}
