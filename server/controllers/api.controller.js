@@ -54,7 +54,7 @@ class ApiController {
       axios.get(
         `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${lstDate}.csv`
       )
-      ];
+    ];
 
     try {
       let dataArray = await Promise.all(promiseArr
