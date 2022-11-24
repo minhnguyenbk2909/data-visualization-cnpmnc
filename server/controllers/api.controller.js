@@ -281,8 +281,18 @@ class ApiController {
           : 0;
       }
 
-      return resData
+      let invalidName = []
 
+      if (!resData[c1]) invalidName.push(c1)
+      if (!resData[c2]) invalidName.push(c2)
+
+      if(invalidName.length !== 0){
+        return {code: 1, invalid : invalidName}
+      }
+
+      
+
+      return resData
     } catch(err) {
       console.log(err);
     }

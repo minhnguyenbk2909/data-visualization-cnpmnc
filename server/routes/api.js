@@ -136,6 +136,14 @@ router.get("/compare", async(req,res,next) => {
     })
   }
 
+  if(data.code && data.code == 1){
+    return res.status(400).json({
+      statusCode: 1,
+      statusDescription: 'Invalid country name',
+      invalidName: data.invalid
+    })
+  }
+
   return res.status(200).json({
     statusCode: 0,
     statusDescription: 'Success',
