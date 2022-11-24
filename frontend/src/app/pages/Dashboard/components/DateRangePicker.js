@@ -1,5 +1,4 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
 import MomentUtils from '@date-io/moment';
 import {
   DatePicker,
@@ -10,17 +9,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles } from '@material-ui/core';
-
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
 
 export default function DateRangePicker({
   type,
@@ -31,33 +19,18 @@ export default function DateRangePicker({
   setEndDate,
   month,
   setMonth,
+  setError,
 }) {
-  const classes = useStyles();
-  const [err, setErr] = React.useState(false);
-
-  const daysBetween =
-    startDate && endDate ? Math.abs(startDate.diff(endDate, 'days')) : 0;
-
   const handleChange = (event) => {
     setType(event.target.value);
   };
   const handleStartDateChange = (date) => {
-    // console.log(date);
-    if (date.isAfter(endDate) || daysBetween > 30) {
-      setErr(true);
-      return;
-    }
     setStartDate(date);
-    setErr(false);
+    setError(false);
   };
   const handleEndDateChange = (date) => {
-    // console.log(date.format("DD/MM/yyyy"));
-    if (date.isBefore(startDate) || daysBetween > 30) {
-      setErr(true);
-      return;
-    }
     setEndDate(date);
-    setErr(false);
+    setError(false);
   };
   const handleMonthChange = (date) => {
     console.log(date.format('MM-yyyy'));
@@ -66,8 +39,8 @@ export default function DateRangePicker({
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <Grid container justifyContent='space-around'>
-        <FormControl variant='outlined' className={classes.formControl}>
+      <>
+        <FormControl variant='outlined' style={{ minWidth: 120 }}>
           <InputLabel id='demo-simple-select-outlined-label'>
             Statistic By
           </InputLabel>
@@ -88,7 +61,6 @@ export default function DateRangePicker({
               disableToolbar
               variant='inline'
               format='DD-MM-YYYY'
-              margin='normal'
               id='date-picker-inline'
               label='Date'
               value={startDate}
@@ -101,7 +73,6 @@ export default function DateRangePicker({
               disableToolbar
               variant='inline'
               format='DD-MM-YYYY'
-              margin='normal'
               id='date-picker-inline'
               label='Date'
               value={endDate}
@@ -110,11 +81,6 @@ export default function DateRangePicker({
                 'aria-label': 'change date',
               }}
             />
-            {err && (
-              <div style={{ color: 'red', fontWeight: 'bold' }}>
-                Không hợp lệ
-              </div>
-            )}
           </>
         )}
         {type === 'month' && (
@@ -128,7 +94,7 @@ export default function DateRangePicker({
             onChange={handleMonthChange}
           />
         )}
-      </Grid>
+      </>
     </MuiPickersUtilsProvider>
   );
 }

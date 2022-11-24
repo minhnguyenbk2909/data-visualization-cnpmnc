@@ -1,7 +1,77 @@
-import { Box, Typography } from '@material-ui/core';
-import { ByCountryChart } from './ByCountryChart';
+import { useState, useEffect } from 'react';
+import { Box } from '@material-ui/core';
+import { Line } from 'react-chartjs-2';
+import axios from 'axios';
 
-export const ByCountry = ({ type, startDate, endDate, country }) => {
+const convertStatisticDataToChartDatasets = (statisticData) => {
+  const chartConfigs = [
+    {
+      field: 'newCases',
+      label: 'New Cases',
+      borderColor: '#0000ff',
+      backgroundColor: '#8888ff',
+    },
+    {
+      field: 'deaths',
+      label: 'Deaths',
+      borderColor: '#ff4000',
+      backgroundColor: '#ff8080',
+    },
+    {
+      field: 'recovered',
+      label: 'Recovered',
+      borderColor: '#00ff00',
+      backgroundColor: '#88ff88',
+    },
+  ];
+
+  return {
+    datasets: chartConfigs.map((chartConfig) => ({
+      label: chartConfig.label,
+      data: statisticData.map((statisticDatum) => ({
+        x: statisticDatum.dateTime,
+        y: statisticDatum[chartConfig.field],
+      })),
+      borderColor: chartConfig.borderColor,
+      backgroundColor: chartConfig.backgroundColor,
+    })),
+  };
+};
+
+export const ByCountry = ({
+  type,
+  startDate,
+  endDate,
+  country,
+  isLoading,
+  setIsLoading,
+  statisticData,
+}) => {
+  const chartData = convertStatisticDataToChartDatasets(statisticData);
+  // const [chartData, setChartData] = useState({ datasets: [] });
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: `COVID Cases in ${country}`,
+      },
+    },
+    scales: {
+      y: {
+        min: 0,
+        ticks: {
+          precision: 0,
+          beginAtZero: true,
+        },
+      },
+    },
+  };
+
   return (
     <Box
       sx={{
@@ -29,12 +99,23 @@ export const ByCountry = ({ type, startDate, endDate, country }) => {
       >
         COVID Cases in {country}
       </Box>
-      <ByCountryChart
-        type={type}
-        startDate={startDate}
-        endDate={endDate}
-        country={country}
-      />
+      <Box
+        sx={{
+          width: '90%',
+          padding: 20,
+          border: '1px solid blue',
+          borderRadius: 4,
+          backgroundColor: '#f5f5ff',
+        }}
+      >
+        {isLoading ? (
+          'Loading...'
+        ) : statisticData.length > 0 ? (
+          <Line options={options} data={chartData} />
+        ) : (
+          'No data to show!'
+        )}
+      </Box>
     </Box>
   );
 };
