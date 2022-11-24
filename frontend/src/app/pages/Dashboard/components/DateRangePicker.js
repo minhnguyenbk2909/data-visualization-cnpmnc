@@ -35,12 +35,15 @@ export default function DateRangePicker({
   const classes = useStyles();
   const [err, setErr] = React.useState(false);
 
+  const daysBetween =
+    startDate && endDate ? Math.abs(startDate.diff(endDate, 'days')) : 0;
+
   const handleChange = (event) => {
     setType(event.target.value);
   };
   const handleStartDateChange = (date) => {
     // console.log(date);
-    if (date.isAfter(endDate)) {
+    if (date.isAfter(endDate) || daysBetween > 30) {
       setErr(true);
       return;
     }
@@ -49,7 +52,7 @@ export default function DateRangePicker({
   };
   const handleEndDateChange = (date) => {
     // console.log(date.format("DD/MM/yyyy"));
-    if (date.isBefore(startDate)) {
+    if (date.isBefore(startDate) || daysBetween > 30) {
       setErr(true);
       return;
     }
