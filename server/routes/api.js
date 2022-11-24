@@ -99,17 +99,54 @@ router.get("/statistic-data/v2", async (req, res) => {
   res.status(200).send(JSON.stringify(responseData));
 });
 
-router.get("/compare", async (req, res) => {
-  let c1 = req.query.country1,
-    c2 = req.query.country2,
-    time = req.query.time;
-  const resData = {
+// router.get("/compare", async (req, res) => {
+//   let c1 = req.query.country1,
+//     c2 = req.query.country2,
+//     time = req.query.time;
+//   const resData = {
+//     statusCode: 0,
+//     statusDescription: "Success",
+//     statisticData: await ctrl.compareCountries(c1, c2, time),
+//   };
+//   res.send(resData);
+// });
+
+router.get("/compare", async(req,res,next) => {
+  let {from, to, country1, country2} = req.query
+
+  if(!from || !to || !country1 || !country2)
+    return res.status(400).json({
+      statusCode: 3,
+      statusDescription: "Invalid query"
+    })
+
+  const data = await ctrl.compareCountriesByRange(dayConvert(from), dayConvert(to), country1, country2)
+
+  if(data == 2) {
+    return res.status(400).json({
+      statusCode: 2,
+      statusDescription: 'Date record not exist in DB'
+    })
+  }
+
+  if(data == 4){
+    return res.status(400).json({
+      statusCode: 4,
+      statusDescription: 'Country record not exist in this date'
+    })
+  }
+
+  return res.status(200).json({
     statusCode: 0,
-    statusDescription: "Success",
-    statisticData: await ctrl.compareCountries(c1, c2, time),
-  };
-  res.send(resData);
-});
+    statusDescription: 'Success',
+    data: {
+      from: from,
+      to: to,
+      data : data
+    }
+  })
+})
+
 router.get("/data/monthly", async (req, res, next) => {
   const { month, year } = req.query
 
