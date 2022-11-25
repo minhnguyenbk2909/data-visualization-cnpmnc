@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import Grid from '@material-ui/core/Grid';
+import React from 'react';
 import MomentUtils from '@date-io/moment';
 import {
   DatePicker,
@@ -10,72 +9,38 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles } from '@material-ui/core';
-import { DataContext } from '../../../../App';
 
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
-export default function DateRangePicker() {
-  const { setDataContext } = useContext(DataContext);
-
-  const [selectedDate, setSelectedDate] = React.useState({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
-  const classes = useStyles();
-  const [type, setType] = React.useState('date');
-  const [err, setErr] = React.useState(false);
-
+export default function DateRangePicker({
+  type,
+  setType,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  month,
+  setMonth,
+  setError,
+}) {
   const handleChange = (event) => {
     setType(event.target.value);
-    setDataContext((dataContext) => ({
-      ...dataContext,
-      selectedType: event.target.value,
-    }));
   };
   const handleStartDateChange = (date) => {
-    console.log(date);
-    if (date.valueOf() > selectedDate.endDate.valueOf()) {
-      setErr(true);
-      return;
-    }
-    setSelectedDate((prev) => ({ ...prev, startDate: date }));
-    setErr(false);
-    setDataContext((dataContext) => ({
-      ...dataContext,
-      selectedDate: { ...dataContext.selectedDate, startDate: date },
-    }));
+    setStartDate(date);
+    setError(false);
   };
   const handleEndDateChange = (date) => {
-    // console.log(date.format("DD/MM/yyyy"));
-    if (date.valueOf() < selectedDate.startDate.valueOf()) {
-      setErr(true);
-      return;
-    }
-    setSelectedDate((prev) => ({ ...prev, endDate: date }));
-    setErr(false);
-    setDataContext((dataContext) => ({
-      ...dataContext,
-      selectedDate: { ...dataContext.selectedDate, endDate: date },
-    }));
+    setEndDate(date);
+    setError(false);
   };
   const handleMonthChange = (date) => {
-    console.log(date.format('MM/yyyy'));
-    setSelectedDate(date);
+    console.log(date.format('MM-yyyy'));
+    setMonth(date);
   };
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <Grid container justifyContent='space-around'>
-        <FormControl variant='outlined' className={classes.formControl}>
+      <>
+        <FormControl variant='outlined' style={{ minWidth: 120 }}>
           <InputLabel id='demo-simple-select-outlined-label'>
             Statistic By
           </InputLabel>
@@ -95,11 +60,10 @@ export default function DateRangePicker() {
             <KeyboardDatePicker
               disableToolbar
               variant='inline'
-              format='DD/MM/yyyy'
-              margin='normal'
+              format='DD-MM-YYYY'
               id='date-picker-inline'
               label='Date'
-              value={selectedDate.startDate}
+              value={startDate}
               onChange={handleStartDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
@@ -108,21 +72,15 @@ export default function DateRangePicker() {
             <KeyboardDatePicker
               disableToolbar
               variant='inline'
-              format='DD/MM/yyyy'
-              margin='normal'
+              format='DD-MM-YYYY'
               id='date-picker-inline'
               label='Date'
-              value={selectedDate.endDate}
+              value={endDate}
               onChange={handleEndDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
               }}
             />
-            {err && (
-              <div style={{ color: 'red', fontWeight: 'bold' }}>
-                Không hợp lệ
-              </div>
-            )}
           </>
         )}
         {type === 'month' && (
@@ -132,11 +90,11 @@ export default function DateRangePicker() {
             views={['year', 'month']}
             label='Year and Month'
             helperText='Start from year selection'
-            value={selectedDate}
+            value={month}
             onChange={handleMonthChange}
           />
         )}
-      </Grid>
+      </>
     </MuiPickersUtilsProvider>
   );
 }
