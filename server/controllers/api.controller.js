@@ -140,81 +140,81 @@ class ApiController {
     return firstDay;
   }
 
-  // async filterByCountry(req) {
-  //   const promiseArr = [];
-  //   const result = [];
-  //   let from = req.query.from;
-  //   let parts = from.split("-");
-  //   let fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
-  //   let to = req.query.to;
-  //   parts = to.split("-");
-  //   let toDate = new Date(parts[2], parts[1] - 1, parts[0]);
-  //   let day_count =
-  //     (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
-  //   let country = req.query.country;
-  //   let request = req.query.request || null;
+  async filterByCountry(req) {
+    const promiseArr = [];
+    const result = [];
+    let from = req.query.from;
+    let parts = from.split("-");
+    let fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    let to = req.query.to;
+    parts = to.split("-");
+    let toDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    let day_count =
+      (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
+    let country = req.query.country;
+    let request = req.query.request || null;
 
-  //   for (let day = fromDate; day <= toDate; day = moment(day).add(1, "days")) {
-  //     //console.log(moment(day).format('MM-DD-YYYY'))
-  //     promiseArr.push(this.getByDate(moment(day).format("MM-DD-YYYY")));
-  //   }
+    for (let day = fromDate; day <= toDate; day = moment(day).add(1, "days")) {
+      //console.log(moment(day).format('MM-DD-YYYY'))
+      promiseArr.push(this.getByDate(moment(day).format("MM-DD-YYYY")));
+    }
 
-  //   const registrations = await Promise.all(promiseArr).then((values) => {
-  //     for (let i = 0; i <= day_count; i++) {
-  //       let item = values[i].find((x) => x.Country_Region == country);
-  //       const newItem = new Object();
-  //       newItem.dateTime = moment(item.Last_Update).format("DD-MM-YYYY");
-  //       newItem.totalCases = item.Confirmed || 0;
-  //       newItem.newCases = item.Active || 0;
-  //       newItem.deaths = item.Deaths || 0;
-  //       newItem.recovered = item.Recovered || 0;
-  //       result.push(newItem);
-  //     }
-  //   });
+    const registrations = await Promise.all(promiseArr).then((values) => {
+      for (let i = 0; i <= day_count; i++) {
+        let item = values[i].find((x) => x.Country_Region == country);
+        const newItem = new Object();
+        newItem.dateTime = moment(item.Last_Update).format("DD-MM-YYYY");
+        newItem.totalCases = item.Confirmed || 0;
+        newItem.newCases = item.Active || 0;
+        newItem.deaths = item.Deaths || 0;
+        newItem.recovered = item.Recovered || 0;
+        result.push(newItem);
+      }
+    });
 
-  //   return result;
-  // }
-  // dateSplitter = (date) => {
-  //   let parts = date.split("-");
-  //   return [parts[0], parts[1], parts[2]];
-  // };
-  // async compareCountries(c1, c2, time) {
-  //   let [day, month, year] = this.dateSplitter(time);
-  //   let data = await this.getByDate(`${month}-${day}-${year}`);
-  //   let c1_data = data.find((x) => x.Country_Region == c1),
-  //     c2_data = data.find((x) => x.Country_Region == c2);
-  //   /*
-  //   {
-  //     date:time,
-  //     Country/Region:Vietnam,
-  //     Statistic:
-  //     {
-  //       Confirmed:,
-  //       Deaths:,
-  //       Recovered,
-  //       Active:,
-  //     }
-  //   }
-  //   */
-  //   const result = {
-  //     Date: time,
-  //     "Country 1": {
-  //       Name: c1,
-  //       Confirmed: c1_data.Confirmed,
-  //       Deaths: c1_data.Deaths,
-  //       Recovered: c1_data.Recovered,
-  //       Active: c1_data.Active,
-  //     },
-  //     "Country 2": {
-  //       Name: c2,
-  //       Confirmed: c2_data.Confirmed,
-  //       Deaths: c2_data.Deaths,
-  //       Recovered: c2_data.Recovered,
-  //       Active: c2_data.Active,
-  //     },
-  //   };
-  //   return result;
-  // }
+    return result;
+  }
+  dateSplitter = (date) => {
+    let parts = date.split("-");
+    return [parts[0], parts[1], parts[2]];
+  };
+  async compareCountries(c1, c2, time) {
+    let [day, month, year] = this.dateSplitter(time);
+    let data = await this.getByDate(`${month}-${day}-${year}`);
+    let c1_data = data.find((x) => x.Country_Region == c1),
+      c2_data = data.find((x) => x.Country_Region == c2);
+    /*
+    {
+      date:time,
+      Country/Region:Vietnam,
+      Statistic:
+      {
+        Confirmed:,
+        Deaths:,
+        Recovered,
+        Active:,
+      }
+    }
+    */
+    const result = {
+      Date: time,
+      "Country 1": {
+        Name: c1,
+        Confirmed: c1_data.Confirmed,
+        Deaths: c1_data.Deaths,
+        Recovered: c1_data.Recovered,
+        Active: c1_data.Active,
+      },
+      "Country 2": {
+        Name: c2,
+        Confirmed: c2_data.Confirmed,
+        Deaths: c2_data.Deaths,
+        Recovered: c2_data.Recovered,
+        Active: c2_data.Active,
+      },
+    };
+    return result;
+  }
 
   configUrl(t) {
     return `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${t}.csv`
