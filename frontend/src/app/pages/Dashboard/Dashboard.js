@@ -45,10 +45,12 @@ export default function Dashboard({
   setMonth,
   country,
   setCountry,
+  country2,
+  setCountry2,
   setIsLoading,
   setError,
-  statisticData,
   setStatisticData,
+  setCompareData,
 }) {
   const { pathname } = useLocation();
 
@@ -57,11 +59,13 @@ export default function Dashboard({
       return;
     }
 
+    const from = startDate.format('DD-MM-YYYY');
+    const to = endDate.format('DD-MM-YYYY');
+
     switch (pathname) {
       case '/byCountry':
         setIsLoading(true);
-        const from = startDate.format('DD-MM-YYYY');
-        const to = endDate.format('DD-MM-YYYY');
+
         try {
           const {
             data: { statisticData },
@@ -75,6 +79,21 @@ export default function Dashboard({
         }
         break;
 
+      case '/compare':
+        setIsLoading(true);
+
+        try {
+          const {
+            data: { data },
+          } = await axios.get(
+            `/api/compare?from=${from}&to=${to}&country1=${country}&country2=${country2}`
+          );
+          setCompareData(data);
+          setIsLoading(false);
+        } catch (error) {
+          console.error(error);
+        }
+        break;
       default:
         break;
     }
@@ -110,6 +129,9 @@ export default function Dashboard({
           setError={setError}
         />
         <CountrySelect country={country} setCountry={setCountry} />
+        {pathname === '/compare' && (
+          <CountrySelect country={country2} setCountry={setCountry2} />
+        )}
       </Box>
 
       <Button variant='contained' onClick={handleOnClickFind}>
