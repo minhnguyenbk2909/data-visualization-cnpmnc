@@ -74,11 +74,60 @@ router.get("/country-names", async (req, res) => {
   res.send(await ctrl.getListCountry());
 });
 
-/*
-router.get("/:date", async (req, res) => {
-  res.send(await ctrl.getDate(req.params));
-});
-*/
+
+
+router.get('/statistic-top', async (req, res, next) => {
+  const { from, to, criteria } = req.query;
+
+  var fromDate = moment(from, 'DD/MM/YYYY');
+  var toDate = moment(to, 'DD/MM/YYYY');
+
+  if (fromDate > toDate){
+    res.status(200).send({
+      statusCode: 2,
+      statusDescription: 'Invalid date range'
+    })
+  }
+  var field;
+  if (criteria === 'death')   field = 'Deaths';
+  else if (criteria === 'recover') field = 'Recovered';
+  else  field = 'Active';
+  const obj = {};
+  
+  while(toDate.diff(fromDate, 'days', true) >= 0) {
+    const date = fromDate.format('MM-DD-YYYY').toString();
+    const dataFromGithub = await ctrl.getByDate(date);
+
+    dataFromGithub.forEach((element) => {
+      const countryName = element.Country_Region;
+      const countryData = obj[`${countryName}`];
+
+      if (countryData) {
+        obj[`${countryName}`] += Number( element[`${field}`] );
+      }
+      else {
+        obj[`${countryName}`] = Number( element[`${field}`] );
+      }
+      
+    });
+
+    fromDate.add(1, 'day');
+  }
+
+  const arr = [];
+  for (const [key, value] of Object.entries(obj)) {
+    arr.push({countryName: key, data: value});
+  }
+  arr.sort((a, b) => b.data - a.data);
+
+  res.status(200).send(JSON.stringify(
+    {
+      statusCode: 0,
+      statusDescription: 'Success',
+      statisticData: arr.slice(0, 10)
+    }
+  ));
+})
 
 router.get("/statistic-top", (req, res, next) => {
   const { from, to } = req.query;
@@ -188,4 +237,7 @@ router.get("/data/monthly", async (req, res, next) => {
   })
 })
 
+router.get("/:date", async (req, res) => {
+  res.send(await ctrl.getDate(req.params));
+});
 module.exports = router;
