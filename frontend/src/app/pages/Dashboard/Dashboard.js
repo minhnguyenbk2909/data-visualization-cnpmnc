@@ -7,6 +7,7 @@ import { CountrySelect } from './components/CountrySelect';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
+import { CriteriaSelect } from './components/CriteriaSelect';
 
 const useStyles = makeStyles({
   root: {
@@ -47,10 +48,13 @@ export default function Dashboard({
   setCountry,
   country2,
   setCountry2,
+  criteria,
+  setCriteria,
   setIsLoading,
   setError,
   setStatisticData,
   setCompareData,
+  setTopTenData,
 }) {
   const { pathname } = useLocation();
 
@@ -72,6 +76,8 @@ export default function Dashboard({
           } = await axios.get(
             `/api/statistic-data/v2?country=${country}&from=${from}&to=${to}`
           );
+          console.log(statisticData);
+
           setStatisticData(statisticData);
           setIsLoading(false);
         } catch (error) {
@@ -88,12 +94,32 @@ export default function Dashboard({
           } = await axios.get(
             `/api/compare?from=${from}&to=${to}&country1=${country}&country2=${country2}`
           );
+
           setCompareData(data);
           setIsLoading(false);
         } catch (error) {
           console.error(error);
         }
         break;
+
+      case '/top10':
+        setIsLoading(true);
+
+        try {
+          const {
+            data: { statisticData },
+          } = await axios.get(
+            `/api/statistic-top?from=${from}&to=${to}&criteria=${criteria}`
+          )
+          
+          setTopTenData(statisticData);
+          setIsLoading(false);
+        } catch (error) {
+          console.error(error);
+        }
+        break;
+
+
       default:
         break;
     }
@@ -131,6 +157,9 @@ export default function Dashboard({
         <CountrySelect country={country} setCountry={setCountry} />
         {pathname === '/compare' && (
           <CountrySelect country={country2} setCountry={setCountry2} />
+        )}
+        {pathname === '/top10' && (
+          <CriteriaSelect criteria={criteria} setCriteria={setCriteria} />
         )}
       </Box>
 

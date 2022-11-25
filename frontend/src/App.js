@@ -22,12 +22,15 @@ function App() {
   const [month, setMonth] = useState(''); // moment object; format: MM-YYYY
   const [country, setCountry] = useState('Vietnam');
   const [country2, setCountry2] = useState('Thailand');
+  const [criteria, setCriteria] = useState('death')
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
   // Server state
   const [statisticData, setStatisticData] = useState([]);
   const [compareData, setCompareData] = useState({});
+  const [topTenData, setTopTenData] = useState([]);
+
 
   return (
     <Box
@@ -54,10 +57,13 @@ function App() {
         setCountry={setCountry}
         country2={country2}
         setCountry2={setCountry2}
+        criteria={criteria}
+        setCriteria={setCriteria}
         setIsLoading={setIsLoading}
         setError={setError}
         setStatisticData={setStatisticData}
         setCompareData={setCompareData}
+        setTopTenData={setTopTenData}
       />
 
       {error && (
@@ -84,7 +90,19 @@ function App() {
           }
         />
 
-        <Route path='/top10' element={<Top10 />} />
+        <Route path='/top10' element={
+          <Top10
+            type={type}
+            startDate={startDate}
+            endDate={endDate}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            topTenData={topTenData}
+            criteria={criteria}
+          />
+        }
+        />
+
         <Route
           path='/compare'
           element={

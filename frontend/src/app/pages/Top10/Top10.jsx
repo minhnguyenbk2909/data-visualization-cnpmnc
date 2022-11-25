@@ -1,7 +1,50 @@
 import { Box } from "@material-ui/core";
 import { Bar } from "react-chartjs-2";
 
-export const Top10 = () => {
+const convertStatisticDataToChartDatasets = (topTenData, criteria) => {
+  let label;
+  let borderColor;
+  let backgroundColor;
+
+  if (criteria === "death") {
+    label = 'Death';
+    borderColor = "#ff4000";
+    backgroundColor = "#ff8080";
+  } else if (criteria === "active") {
+    label = 'Active';
+    borderColor = "#0000ff";
+    backgroundColor = "#8888ff";
+  } else if (criteria === "recover") {
+    label = 'Recovered';
+    borderColor = "#00ff00";
+    backgroundColor = "#88ff88";
+  }
+
+  const convertedData = {
+    labels: topTenData.map((data) => data.countryName),
+    datasets: [
+      {
+        label: label,
+        data: topTenData.map((data) => data.data),
+        borderColor: borderColor,
+        backgroundColor: backgroundColor,
+      },
+    ],
+  };
+
+  console.log(convertedData);
+  return convertedData;
+};
+
+export const Top10 = ({
+  type,
+  startDate,
+  endDate,
+  isLoading,
+  setIsLoading,
+  topTenData,
+  criteria,
+}) => {
   const options = {
     responsive: true,
     plugins: {
@@ -10,36 +53,12 @@ export const Top10 = () => {
       },
       title: {
         display: true,
-        text: "Chart.js Bar Chart",
+        text: `Top 10 countries with most COVID ${criteria} cases`,
       },
     },
   };
 
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "Dataset 1",
-        data: labels.map(() => 10),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-      {
-        label: "Dataset 2",
-        data: labels.map(() => 20),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
-  };
+  const data = convertStatisticDataToChartDatasets(topTenData, criteria);
 
   return (
     <Box
@@ -66,7 +85,7 @@ export const Top10 = () => {
           fontWeight: 700,
         }}
       >
-        Top 10 countries with most COVID cases
+        Top 10 countries with most COVID {criteria} cases
       </Box>
       <Box
         sx={{
@@ -77,7 +96,13 @@ export const Top10 = () => {
           backgroundColor: "#f5f5ff",
         }}
       >
-        <Bar options={options} data={data} />
+        {isLoading ? (
+          "Loading..."
+        ) : topTenData.length > 0 ? (
+          <Bar options={options} data={data} />
+        ) : (
+          "No data to show!"
+        )}
       </Box>
     </Box>
   );
