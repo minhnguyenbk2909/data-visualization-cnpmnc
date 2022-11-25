@@ -78,8 +78,10 @@ router.get("/country-names", async (req, res) => {
 
 router.get('/statistic-top', async (req, res, next) => {
   const { from, to, criteria } = req.query;
+
   var fromDate = moment(from, 'DD/MM/YYYY');
   var toDate = moment(to, 'DD/MM/YYYY');
+
   if (fromDate > toDate){
     res.status(200).send({
       statusCode: 2,
@@ -94,17 +96,18 @@ router.get('/statistic-top', async (req, res, next) => {
   
   while(toDate.diff(fromDate, 'days', true) >= 0) {
     const date = fromDate.format('MM-DD-YYYY').toString();
-
-    console.log(`GETTING DATA FROM GITHUB, DATE: ${date}`);
-
     const dataFromGithub = await ctrl.getByDate(date);
 
     dataFromGithub.forEach((element) => {
       const countryName = element.Country_Region;
       const countryData = obj[`${countryName}`];
 
-      if (countryData)  obj[`${countryName}`] += Number( element[`${field}`] );
-      else  obj[`${countryName}`] = Number( element[`${field}`] );
+      if (countryData) {
+        obj[`${countryName}`] += Number( element[`${field}`] );
+      }
+      else {
+        obj[`${countryName}`] = Number( element[`${field}`] );
+      }
       
     });
 
@@ -115,21 +118,16 @@ router.get('/statistic-top', async (req, res, next) => {
   for (const [key, value] of Object.entries(obj)) {
     arr.push({countryName: key, data: value});
   }
-  const finalArr = arr.sort((a, b) => b.data - a.data);
+  arr.sort((a, b) => b.data - a.data);
 
   res.status(200).send(JSON.stringify(
     {
       statusCode: 0,
       statusDescription: 'Success',
-      statisticData: finalArr.slice(0, 10)
+      statisticData: arr.slice(0, 10)
     }
   ));
 })
-/*
-router.get("/:date", async (req, res) => {
-  res.send(await ctrl.getDate(req.params));
-});
-*/
 
 router.get("/statistic-top", (req, res, next) => {
   const { from, to } = req.query;
