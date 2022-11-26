@@ -62,7 +62,7 @@ export default function DateRangePicker({
               variant='inline'
               format='DD-MM-YYYY'
               id='date-picker-inline'
-              label='Date'
+              label='Start Date'
               value={startDate}
               onChange={handleStartDateChange}
               KeyboardButtonProps={{
@@ -74,7 +74,7 @@ export default function DateRangePicker({
               variant='inline'
               format='DD-MM-YYYY'
               id='date-picker-inline'
-              label='Date'
+              label='End Date'
               value={endDate}
               onChange={handleEndDateChange}
               KeyboardButtonProps={{

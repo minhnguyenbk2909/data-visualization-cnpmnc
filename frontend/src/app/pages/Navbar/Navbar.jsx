@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Tab = ({ label, to, navigate }) => {

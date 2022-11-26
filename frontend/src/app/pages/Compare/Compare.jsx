@@ -94,9 +94,9 @@ export const Compare = ({
   const tableConfigs = {
     columns: [
       { label: 'Country', field: 'countryName', width: 200, color: '#000000' },
-      { label: 'New Cases', field: 'newCase', width: 160, color: '#0000af' },
-      { label: 'Deaths', field: 'death', width: 160, color: '#af4000' },
-      { label: 'Recovered', field: 'recover', width: 160, color: '#00af00' },
+      { label: 'New Cases', field: 'newCase', width: 140, color: '#0000af' },
+      { label: 'Deaths', field: 'death', width: 140, color: '#af4000' },
+      { label: 'Recovered', field: 'recover', width: 140, color: '#00af00' },
     ],
     rows: isChartDataEmpty ? [] : Object.keys(compareData.data), // ['country1', 'country2']
   };
@@ -215,7 +215,7 @@ export const Compare = ({
 
       <Box
         sx={{
-          width: '90%',
+          width: '60%',
           padding: 20,
           border: '1px solid blue',
           borderRadius: 4,
