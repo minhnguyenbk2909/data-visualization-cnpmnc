@@ -56,7 +56,7 @@ export default function Dashboard({
     const to = endDate.format('DD-MM-YYYY');
 
     switch (pathname) {
-      case '/':
+      case '/byCountry':
         setIsLoading(true);
 
         try {
@@ -152,8 +152,16 @@ export default function Dashboard({
         )}
       </Box>
 
-      <Button style={{backgroundColor: 'blueviolet', color: 'white', fontWeight: 'bold'}} variant="contained" onClick={handleOnClickFind}>
-      {/* <Button variant='contained' onClick={handleOnClickFind}> */}
+      <Button
+        style={{
+          backgroundColor: 'blueviolet',
+          color: 'white',
+          fontWeight: 'bold',
+        }}
+        variant='contained'
+        onClick={handleOnClickFind}
+      >
+        {/* <Button variant='contained' onClick={handleOnClickFind}> */}
         Show
       </Button>
     </Box>

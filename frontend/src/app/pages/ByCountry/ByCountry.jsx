@@ -6,8 +6,14 @@ const convertStatisticDataToChartDatasets = (statisticData) => {
     {
       field: 'totalCases',
       label: 'Total Cases',
+      borderColor: '#00004f',
+      backgroundColor: '#11116f',
+    },
+    {
+      field: 'newCases',
+      label: 'New Cases',
       borderColor: '#0000ff',
-      backgroundColor: '#8888ff',
+      backgroundColor: '#4444ff',
     },
     {
       field: 'deaths',
@@ -69,7 +75,7 @@ export const ByCountry = ({ country, isLoading, statisticData }) => {
         flexDirection: 'column',
         alignItems: 'center',
         gap: 16,
-        marginBottom: 50
+        marginBottom: 50,
       }}
     >
       <Box
