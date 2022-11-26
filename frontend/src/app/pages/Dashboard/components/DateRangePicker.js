@@ -33,7 +33,6 @@ export default function DateRangePicker({
     setError(false);
   };
   const handleMonthChange = (date) => {
-    console.log(date.format('MM-yyyy'));
     setMonth(date);
   };
 

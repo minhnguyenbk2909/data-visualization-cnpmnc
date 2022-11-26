@@ -188,6 +188,7 @@ export const Compare = ({ country, country2, isLoading, compareData }) => {
           border: '1px solid blue',
           borderRadius: 4,
           backgroundColor: '#f5f5ff',
+          marginBottom: 50
         }}
       >
         {isLoading ? (
