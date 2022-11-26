@@ -159,7 +159,6 @@ class ApiController {
     let day_count =
       (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
     let country = req.query.country;
-    let request = req.query.request || null;
 
     if ((fromDate.getTime() > toDate.getTime()) || moment(curr).startOf('day').isSame(moment(toDate).startOf('day'))) {
       responseData.statusCode = 2,
@@ -167,15 +166,16 @@ class ApiController {
       return responseData;
     }
 
-    
-    for (let day = moment(fromDate).subtract(1, "days"); day < toDate; day = moment(day).add(1, "days")) {
+    for (let day = moment(fromDate).subtract(2, "days"); day < toDate; day = moment(day).add(1, "days")) {
       //console.log(moment(day).format('MM-DD-YYYY'))
       promiseArr.push(this.getByDate(moment(day).format("MM-DD-YYYY")));
     }
-  
+    
     const registrations = await Promise.all(promiseArr).then((values) => {
-      for (let i = 0; i <= day_count; i++) {
+      for (let i = 1; i <= day_count + 1; i++) {
         let item = values[i].find((x) => x.Country_Region == country);
+        let prevCases = 0;
+        prevCases = values[i - 1].find((x) => x.Country_Region == country).Confirmed;
 
         if (!item) {
           responseData.statusCode = 1,
@@ -186,7 +186,7 @@ class ApiController {
         const newItem = new Object();
         newItem.dateTime = moment(item.Last_Update).format("DD-MM-YYYY");
         newItem.totalCases = item.Confirmed || 0;
-        newItem.newCases = item.Active || 0;
+        newItem.newCases = item.Confirmed - prevCases || 0;
         newItem.deaths = item.Deaths || 0;
         newItem.recovered = item.Recovered || 0;
 
