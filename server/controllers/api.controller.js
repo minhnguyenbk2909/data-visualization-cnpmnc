@@ -188,9 +188,9 @@ class ApiController {
         const newItem = new Object();
         newItem.dateTime = moment(item.Last_Update).format("DD-MM-YYYY");
         newItem.totalCases = item.Confirmed || 0;
-        newItem.newCases = item.Confirmed - prevCases || 0;
-        newItem.deaths = item.Deaths - prevDeaths || 0;
-        newItem.recovered = item.Recovered - prevRecoverd || 0;
+        newItem.newCases = (item.Confirmed - prevCases) > 0 ? item.Confirmed - prevCases : 0;
+        newItem.deaths = (item.Deaths - prevDeaths) > 0 ? item.Deaths - prevDeaths : 0
+        newItem.recovered = (item.Recovered - prevRecoverd) > 0 ? item.Recovered - prevRecoverd : 0; 
 
         result.push(newItem);
       }
