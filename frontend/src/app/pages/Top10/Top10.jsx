@@ -18,8 +18,8 @@ const convertStatisticDataToChartDatasets = (topTenData, criteria) => {
     label = 'Death';
     borderColor = '#ff4000';
     backgroundColor = '#ff8080';
-  } else if (criteria === 'active') {
-    label = 'Active';
+  } else if (criteria === 'confirmed') {
+    label = 'Confirmed';
     borderColor = '#0000ff';
     backgroundColor = '#8888ff';
   } else if (criteria === 'recover') {
