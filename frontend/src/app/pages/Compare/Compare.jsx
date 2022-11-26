@@ -159,53 +159,59 @@ export const Compare = ({
         Compare COVID Cases in {country} & {country2}
       </Box>
 
-      <Table style={{ width: 'fit-content', backgroundColor: '#f5f5ff' }}>
-        <TableHead>
-          <TableRow>
-            {tableConfigs.columns.map((tableColumn) => {
+      {isLoading ? (
+        'Loading...'
+      ) : isChartDataEmpty ? (
+        'No data to show!'
+      ) : (
+        <Table style={{ width: 'fit-content', backgroundColor: '#f5f5ff' }}>
+          <TableHead>
+            <TableRow>
+              {tableConfigs.columns.map((tableColumn) => {
+                return (
+                  <TableCell
+                    align='center'
+                    style={{
+                      width: tableColumn.width,
+                      fontWeight: 700,
+                      border: '1px solid blue',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    {tableColumn.label}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {tableConfigs.rows.map((tableRow) => {
+              // 'Vietnam' or 'Thailand'
+              const countryName = tableRow;
               return (
-                <TableCell
-                  align='center'
-                  style={{
-                    width: tableColumn.width,
-                    fontWeight: 700,
-                    border: '1px solid blue',
-                    boxSizing: 'border-box',
-                  }}
-                >
-                  {tableColumn.label}
-                </TableCell>
+                <TableRow>
+                  {tableConfigs.columns.map((tableColumn) => {
+                    return (
+                      <TableCell
+                        align='center'
+                        style={{
+                          width: tableColumn.width,
+                          color: tableColumn.color,
+                          border: '1px solid blue',
+                          boxSizing: 'border-box',
+                        }}
+                      >
+                        {compareData.data[countryName][tableColumn.field]}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
               );
             })}
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {tableConfigs.rows.map((tableRow) => {
-            // 'Vietnam' or 'Thailand'
-            const countryName = tableRow;
-            return (
-              <TableRow>
-                {tableConfigs.columns.map((tableColumn) => {
-                  return (
-                    <TableCell
-                      align='center'
-                      style={{
-                        width: tableColumn.width,
-                        color: tableColumn.color,
-                        border: '1px solid blue',
-                        boxSizing: 'border-box',
-                      }}
-                    >
-                      {compareData.data[countryName][tableColumn.field]}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+          </TableBody>
+        </Table>
+      )}
 
       <Box
         sx={{

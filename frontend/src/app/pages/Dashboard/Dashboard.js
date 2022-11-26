@@ -21,14 +21,13 @@ const useStyles = makeStyles({
   },
 });
 
-const isDateValid = (startDate, endDate, setError) => {
+const isDateValid = (startDate, endDate) => {
   const daysBetween = endDate.diff(startDate, 'days');
   if (
     startDate.isSameOrAfter(endDate, 'days') ||
     endDate.isSameOrAfter(moment(), 'days') ||
     daysBetween > 30
   ) {
-    setError(true);
     return false;
   } else {
     return true;
@@ -59,12 +58,27 @@ export default function Dashboard({
   const { pathname } = useLocation();
 
   const handleOnClickFind = async () => {
-    if (!isDateValid(startDate, endDate, setError)) {
+    if (type === 'date' && !isDateValid(startDate, endDate)) {
+      setError(true);
       return;
     }
 
-    const from = startDate.format('DD-MM-YYYY');
-    const to = endDate.format('DD-MM-YYYY');
+    let from, to;
+
+    switch (type) {
+      case 'date':
+        from = startDate.format('DD-MM-YYYY');
+        to = endDate.format('DD-MM-YYYY');
+        break;
+
+      case 'month':
+        from = month.startOf('month').format('DD-MM-YYYY');
+        to = month.endOf('month').format('DD-MM-YYYY');
+        break;
+
+      default:
+        break;
+    }
 
     switch (pathname) {
       case '/byCountry':
@@ -163,7 +177,11 @@ export default function Dashboard({
         )}
       </Box>
 
-      <Button variant='contained' onClick={handleOnClickFind}>
+      <Button
+        variant='contained'
+        style={{ backgroundColor: '#b6b6ff' }}
+        onClick={handleOnClickFind}
+      >
         Show
       </Button>
     </Box>
