@@ -143,37 +143,65 @@ class ApiController {
   async filterByCountry(req) {
     const promiseArr = [];
     const result = [];
-    let from = req.query.from;
-    let parts = from.split("-");
-    let fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
-    let to = req.query.to;
-    parts = to.split("-");
-    let toDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    const curr = new Date();
+    const responseData = {
+      statusCode: 4,
+      statusDescription: "Unknown error",
+      statisticData: [],
+    };
+
+    let from = this.dateSplitter(req.query.from)
+    let fromDate = new Date(from[2], from[1] - 1, from[0])
+
+    let to = this.dateSplitter(req.query.to)
+    let toDate = new Date(to[2], to[1] - 1, to[0]);
+    
     let day_count =
       (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24);
     let country = req.query.country;
     let request = req.query.request || null;
 
-    for (let day = fromDate; day <= toDate; day = moment(day).add(1, "days")) {
+    if ((fromDate.getTime() > toDate.getTime()) || moment(curr).startOf('day').isSame(moment(toDate).startOf('day'))) {
+      responseData.statusCode = 2,
+      responseData.statusDescription = "Invalid date range"
+      return responseData;
+    }
+
+    
+    for (let day = moment(fromDate).subtract(1, "days"); day < toDate; day = moment(day).add(1, "days")) {
       //console.log(moment(day).format('MM-DD-YYYY'))
       promiseArr.push(this.getByDate(moment(day).format("MM-DD-YYYY")));
     }
-
+  
     const registrations = await Promise.all(promiseArr).then((values) => {
       for (let i = 0; i <= day_count; i++) {
         let item = values[i].find((x) => x.Country_Region == country);
+
+        if (!item) {
+          responseData.statusCode = 1,
+          responseData.statusDescription = "Invalid country"
+          return responseData;
+        }
+
         const newItem = new Object();
         newItem.dateTime = moment(item.Last_Update).format("DD-MM-YYYY");
         newItem.totalCases = item.Confirmed || 0;
         newItem.newCases = item.Active || 0;
         newItem.deaths = item.Deaths || 0;
         newItem.recovered = item.Recovered || 0;
+
         result.push(newItem);
       }
     });
 
-    return result;
-  }
+    if (result.length == day_count + 1)
+    {
+      responseData.statusCode = 0,
+      responseData.statusDescription = "Success"
+      responseData.statisticData = result;
+    }
+    return responseData;
+  };
   dateSplitter = (date) => {
     let parts = date.split("-");
     return [parts[0], parts[1], parts[2]];

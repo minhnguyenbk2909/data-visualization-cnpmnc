@@ -140,12 +140,8 @@ router.get("/statistic-top", (req, res, next) => {
 });
 
 router.get("/statistic-data/v2", async (req, res) => {
-  const responseData = {
-    statusCode: 0,
-    statusDescription: "Success",
-    statisticData: await ctrl.filterByCountry(req),
-  };
-  res.status(200).send(JSON.stringify(responseData));
+  const response = await ctrl.filterByCountry(req);
+  res.status(200).send(JSON.stringify(response));
 });
 
 // router.get("/compare", async (req, res) => {
