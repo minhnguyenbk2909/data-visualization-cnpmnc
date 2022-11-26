@@ -1,4 +1,11 @@
-import { Box } from '@material-ui/core';
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
 
 const convertStatisticDataToChartDatasets = (topTenData, criteria) => {
@@ -49,7 +56,24 @@ export const Top10 = ({ isLoading, topTenData, criteria }) => {
     },
   };
 
-  const data = convertStatisticDataToChartDatasets(topTenData, criteria);
+  const isChartDataEmpty = Object.keys(topTenData).length === 0;
+
+  const data =
+    !isChartDataEmpty &&
+    convertStatisticDataToChartDatasets(topTenData, criteria);
+  console.log(topTenData, criteria);
+
+  const tableConfigs = {
+    columns: [
+      { label: 'Country', field: 'countryName', width: 200, color: '#000000' },
+      criteria === 'active'
+        ? { label: 'Active', field: 'data', width: 150, color: '#0000af' }
+        : criteria === 'death'
+        ? { label: 'Deaths', field: 'data', width: 150, color: '#af4000' }
+        : { label: 'Recovered', field: 'data', width: 150, color: '#00af00' },
+    ],
+    rows: isChartDataEmpty ? [] : topTenData,
+  };
 
   return (
     <Box
@@ -80,20 +104,82 @@ export const Top10 = ({ isLoading, topTenData, criteria }) => {
       </Box>
       <Box
         sx={{
-          width: '60%',
-          padding: 20,
-          border: '1px solid blue',
-          borderRadius: 4,
-          backgroundColor: '#f5f5ff',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          gap: 24,
         }}
       >
-        {isLoading ? (
-          'Loading...'
-        ) : topTenData.length > 0 ? (
-          <Bar options={options} data={data} />
-        ) : (
-          'No data to show!'
-        )}
+        <Box
+          sx={{
+            width: '60%',
+            height: 'fit-content',
+            padding: 20,
+            border: '1px solid blue',
+            borderRadius: 4,
+            backgroundColor: '#f5f5ff',
+          }}
+        >
+          {isLoading ? (
+            'Loading...'
+          ) : topTenData.length > 0 ? (
+            <Bar options={options} data={data} />
+          ) : (
+            'No data to show!'
+          )}
+        </Box>
+
+        <Table style={{ width: '30%' }}>
+          <TableHead>
+            <TableRow>
+              {tableConfigs.columns.map((tableColumn) => {
+                return (
+                  <TableCell
+                    align='center'
+                    style={{
+                      padding: 4,
+                      width: tableColumn.width,
+                      fontWeight: 700,
+                      border: '1px solid blue',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    {tableColumn.label}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {tableConfigs.rows.map((tableRow) => {
+              // const countryName = tableRow.countryName;
+              // const data = tableRow.data;
+              console.log('row', tableRow);
+              return (
+                <TableRow>
+                  {tableConfigs.columns.map((tableColumn) => {
+                    console.log(topTenData[tableColumn.field]);
+                    return (
+                      <TableCell
+                        align='center'
+                        style={{
+                          padding: 4,
+                          width: tableColumn.width,
+                          color: tableColumn.color,
+                          border: '1px solid blue',
+                          boxSizing: 'border-box',
+                        }}
+                      >
+                        {tableRow[tableColumn.field]}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </Box>
     </Box>
   );
