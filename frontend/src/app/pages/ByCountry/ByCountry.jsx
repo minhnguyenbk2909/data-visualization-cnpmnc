@@ -69,6 +69,7 @@ export const ByCountry = ({ country, isLoading, statisticData }) => {
         flexDirection: 'column',
         alignItems: 'center',
         gap: 16,
+        marginBottom: 50
       }}
     >
       <Box

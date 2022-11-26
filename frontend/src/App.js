@@ -1,30 +1,30 @@
 // import "./assets/styles/global.css";
-import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
-import { Box, Typography } from "@material-ui/core";
-import moment from "moment";
-import axios from "axios";
-import { ByCountry } from "./app/pages/ByCountry/ByCountry";
-import Dashboard from "./app/pages/Dashboard";
-import { Navbar } from "./app/pages/Navbar/Navbar";
-import { Top10 } from "./app/pages/Top10/Top10";
-import { Compare } from "./app/pages/Compare/Compare";
+import { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Box, Typography } from '@material-ui/core';
+import moment from 'moment';
+import axios from 'axios';
+import { ByCountry } from './app/pages/ByCountry/ByCountry';
+import Dashboard from './app/pages/Dashboard';
+import { Navbar } from './app/pages/Navbar/Navbar';
+import { Top10 } from './app/pages/Top10/Top10';
+import { Compare } from './app/pages/Compare/Compare';
 
-axios.defaults.baseURL = "http://localhost:4000";
+axios.defaults.baseURL = 'http://localhost:4000';
 
 function App() {
   // Client state
-  const [type, setType] = useState("date"); // "date", "month"
+  const [type, setType] = useState('date'); // "date", "month"
   const [startDate, setStartDate] = useState(
-    moment("05-06-2021", "DD-MM-YYYY")
+    moment('05-06-2021', 'DD-MM-YYYY')
   ); // moment object; format: DD-MM-YYYY
-  const [endDate, setEndDate] = useState(moment("04-07-2021", "DD-MM-YYYY")); // moment object; format: DD-MM-YYYY
-  const [month, setMonth] = useState(""); // moment object; format: MM-YYYY
-  const [country, setCountry] = useState("Vietnam");
-  const [country2, setCountry2] = useState("Thailand");
-  const [criteria, setCriteria] = useState("death");
+  const [endDate, setEndDate] = useState(moment('04-07-2021', 'DD-MM-YYYY')); // moment object; format: DD-MM-YYYY
+  const [month, setMonth] = useState(''); // moment object; format: MM-YYYY
+  const [country, setCountry] = useState('Vietnam');
+  const [country2, setCountry2] = useState('Thailand');
+  const [criteria, setCriteria] = useState('death');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
 
   // Server state
   const [statisticData, setStatisticData] = useState([]);
@@ -40,11 +40,11 @@ function App() {
   return (
     <Box
       sx={{
-        width: "100vw",
-        minHeight: "100vh",
-        backgroundColor: "#eaeaff",
-        display: "flex",
-        flexDirection: "column",
+        width: '100vw',
+        minHeight: '100vh',
+        backgroundColor: '#eaeaff',
+        display: 'flex',
+        flexDirection: 'column',
         gap: 24,
       }}
     >
@@ -73,15 +73,15 @@ function App() {
 
       {error && (
         <Typography
-          style={{ color: "red", fontWeight: 700, textAlign: "center" }}
+          style={{ color: 'red', fontWeight: 700, textAlign: 'center' }}
         >
-          Không hợp lệ
+          {error}
         </Typography>
       )}
 
       <Routes>
         <Route
-          path="/"
+          path='/byCountry'
           element={
             <ByCountry
               type={type}
@@ -96,7 +96,7 @@ function App() {
         />
 
         <Route
-          path="/top10"
+          path='/top10'
           element={
             <Top10
               type={type}
@@ -111,7 +111,7 @@ function App() {
         />
 
         <Route
-          path="/compare"
+          path='/compare'
           element={
             <Compare
               type={type}
