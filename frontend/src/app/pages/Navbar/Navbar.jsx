@@ -2,7 +2,7 @@ import { Box, Typography, Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 
 const Tab = ({ label, to, navigate }) => {
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
   return (
     <Box
