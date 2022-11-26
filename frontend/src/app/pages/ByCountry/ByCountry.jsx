@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box, LinearProgress } from '@material-ui/core';
 import { Line } from 'react-chartjs-2';
 
 const convertStatisticDataToChartDatasets = (statisticData) => {
@@ -17,13 +17,13 @@ const convertStatisticDataToChartDatasets = (statisticData) => {
     },
     {
       field: 'deaths',
-      label: 'Total Deaths',
+      label: 'Deaths',
       borderColor: '#ff4000',
       backgroundColor: '#ff8080',
     },
     {
       field: 'recovered',
-      label: 'Total Recovered',
+      label: 'Recovered',
       borderColor: '#00ff00',
       backgroundColor: '#88ff88',
     },
@@ -105,7 +105,7 @@ export const ByCountry = ({ country, isLoading, statisticData }) => {
         }}
       >
         {isLoading ? (
-          'Loading...'
+          <LinearProgress />
         ) : statisticData.length > 0 ? (
           <Line options={options} data={chartData} />
         ) : (

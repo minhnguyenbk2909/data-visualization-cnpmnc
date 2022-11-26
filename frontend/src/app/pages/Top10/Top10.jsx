@@ -1,30 +1,31 @@
 import {
   Box,
+  LinearProgress,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-} from "@material-ui/core";
-import { Bar } from "react-chartjs-2";
+} from '@material-ui/core';
+import { Bar } from 'react-chartjs-2';
 
 const convertStatisticDataToChartDatasets = (topTenData, criteria) => {
   let label;
   let borderColor;
   let backgroundColor;
 
-  if (criteria === "death") {
-    label = "Death";
-    borderColor = "#ff4000";
-    backgroundColor = "#ff8080";
-  } else if (criteria === "active") {
-    label = "Active";
-    borderColor = "#0000ff";
-    backgroundColor = "#8888ff";
-  } else if (criteria === "recover") {
-    label = "Recovered";
-    borderColor = "#00ff00";
-    backgroundColor = "#88ff88";
+  if (criteria === 'death') {
+    label = 'Death';
+    borderColor = '#ff4000';
+    backgroundColor = '#ff8080';
+  } else if (criteria === 'active') {
+    label = 'Active';
+    borderColor = '#0000ff';
+    backgroundColor = '#8888ff';
+  } else if (criteria === 'recover') {
+    label = 'Recovered';
+    borderColor = '#00ff00';
+    backgroundColor = '#88ff88';
   }
 
   const convertedData = {
@@ -47,7 +48,7 @@ export const Top10 = ({ isLoading, topTenData, criteria }) => {
     responsive: true,
     plugins: {
       legend: {
-        position: "top",
+        position: 'top',
       },
       title: {
         display: true,
@@ -65,12 +66,12 @@ export const Top10 = ({ isLoading, topTenData, criteria }) => {
 
   const tableConfigs = {
     columns: [
-      { label: "Country", field: "countryName", width: 200, color: "#000000" },
-      criteria === "confirmed"
-        ? { label: "Confirmed", field: "data", width: 150, color: "#0000af" }
-        : criteria === "death"
-        ? { label: "Deaths", field: "data", width: 150, color: "#af4000" }
-        : { label: "Recovered", field: "data", width: 150, color: "#00af00" },
+      { label: 'Country', field: 'countryName', width: 200, color: '#000000' },
+      criteria === 'confirmed'
+        ? { label: 'Confirmed', field: 'data', width: 150, color: '#0000af' }
+        : criteria === 'death'
+        ? { label: 'Deaths', field: 'data', width: 150, color: '#af4000' }
+        : { label: 'Recovered', field: 'data', width: 150, color: '#00af00' },
     ],
     rows: isChartDataEmpty ? [] : topTenData,
   };
@@ -79,24 +80,24 @@ export const Top10 = ({ isLoading, topTenData, criteria }) => {
     <Box
       sx={{
         paddingTop: 16,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         gap: 16,
         marginBottom: 50,
       }}
     >
       <Box
         sx={{
-          width: "40%",
-          border: "1px solid blue",
+          width: '40%',
+          border: '1px solid #009df0',
           borderRadius: 4,
-          boxShadow: "0px 0px 2px",
-          backgroundColor: "#f5f5ff",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          paddingY: "1rem",
+          boxShadow: '0px 0px 2px #3333d3',
+          backgroundColor: '#f5f5ff',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          paddingY: '1rem',
           fontSize: 18,
           fontWeight: 700,
         }}
@@ -105,82 +106,89 @@ export const Top10 = ({ isLoading, topTenData, criteria }) => {
       </Box>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           gap: 24,
         }}
       >
         <Box
           sx={{
-            width: "60%",
-            height: "fit-content",
+            width: '70%',
+            minWidth: '40vh',
+            height: 'fit-content',
             padding: 20,
-            border: "1px solid blue",
+            border: '1px solid blue',
             borderRadius: 4,
-            backgroundColor: "#f5f5ff",
+            backgroundColor: '#f5f5ff',
           }}
         >
           {isLoading ? (
-            "Loading..."
+            <LinearProgress />
           ) : topTenData.length > 0 ? (
             <Bar options={options} data={data} />
           ) : (
-            "No data to show!"
+            'No data to show!'
           )}
         </Box>
 
-        <Table style={{ width: "30%" }}>
-          <TableHead>
-            <TableRow>
-              {tableConfigs.columns.map((tableColumn) => {
+        {isLoading ? (
+          <LinearProgress />
+        ) : isChartDataEmpty ? (
+          ''
+        ) : (
+          <Table style={{ width: '20%' }}>
+            <TableHead>
+              <TableRow>
+                {tableConfigs.columns.map((tableColumn) => {
+                  return (
+                    <TableCell
+                      align='center'
+                      style={{
+                        padding: 4,
+                        width: tableColumn.width,
+                        fontWeight: 700,
+                        border: '1px solid blue',
+                        boxSizing: 'border-box',
+                      }}
+                    >
+                      {tableColumn.label}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {tableConfigs.rows.map((tableRow) => {
+                // const countryName = tableRow.countryName;
+                // const data = tableRow.data;
+                console.log('row', tableRow);
                 return (
-                  <TableCell
-                    align="center"
-                    style={{
-                      padding: 4,
-                      width: tableColumn.width,
-                      fontWeight: 700,
-                      border: "1px solid blue",
-                      boxSizing: "border-box",
-                    }}
-                  >
-                    {tableColumn.label}
-                  </TableCell>
+                  <TableRow>
+                    {tableConfigs.columns.map((tableColumn) => {
+                      console.log(topTenData[tableColumn.field]);
+                      return (
+                        <TableCell
+                          align='center'
+                          style={{
+                            padding: 4,
+                            width: tableColumn.width,
+                            color: tableColumn.color,
+                            border: '1px solid blue',
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          {tableRow[tableColumn.field]}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
                 );
               })}
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {tableConfigs.rows.map((tableRow) => {
-              // const countryName = tableRow.countryName;
-              // const data = tableRow.data;
-              console.log("row", tableRow);
-              return (
-                <TableRow>
-                  {tableConfigs.columns.map((tableColumn) => {
-                    console.log(topTenData[tableColumn.field]);
-                    return (
-                      <TableCell
-                        align="center"
-                        style={{
-                          padding: 4,
-                          width: tableColumn.width,
-                          color: tableColumn.color,
-                          border: "1px solid blue",
-                          boxSizing: "border-box",
-                        }}
-                      >
-                        {tableRow[tableColumn.field]}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+            </TableBody>
+          </Table>
+        )}
       </Box>
     </Box>
   );

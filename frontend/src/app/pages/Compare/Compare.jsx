@@ -1,5 +1,6 @@
 import {
   Box,
+  LinearProgress,
   Table,
   TableBody,
   TableCell,
@@ -129,9 +130,9 @@ export const Compare = ({ country, country2, isLoading, compareData }) => {
       </Box>
 
       {isLoading ? (
-        'Loading...'
+        <LinearProgress />
       ) : isChartDataEmpty ? (
-        'No data to show!'
+        ''
       ) : (
         <Table style={{ width: 'fit-content', backgroundColor: '#f5f5ff' }}>
           <TableHead>
@@ -188,11 +189,11 @@ export const Compare = ({ country, country2, isLoading, compareData }) => {
           border: '1px solid blue',
           borderRadius: 4,
           backgroundColor: '#f5f5ff',
-          marginBottom: 50
+          marginBottom: 50,
         }}
       >
         {isLoading ? (
-          'Loading...'
+          <LinearProgress />
         ) : isChartDataEmpty ? (
           'No data to show!'
         ) : (
