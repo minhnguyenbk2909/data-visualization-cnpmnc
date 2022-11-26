@@ -1,23 +1,23 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-import { Box } from '@material-ui/core';
-import axios from 'axios';
-import moment from 'moment';
-import DateRangePicker from './components/DateRangePicker';
-import { CountrySelect } from './components/CountrySelect';
-import { CriteriaSelect } from './components/CriteriaSelect';
+import React from "react";
+import { useLocation } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import { Box } from "@material-ui/core";
+import axios from "axios";
+import moment from "moment";
+import DateRangePicker from "./components/DateRangePicker";
+import { CountrySelect } from "./components/CountrySelect";
+import { CriteriaSelect } from "./components/CriteriaSelect";
 
 const isDateValid = (startDate, endDate, setError) => {
-  const daysBetween = endDate.diff(startDate, 'days');
-  if (startDate.isSameOrAfter(endDate, 'days')) {
-    setError('Start Date must be before End Date');
+  const daysBetween = endDate.diff(startDate, "days");
+  if (startDate.isSameOrAfter(endDate, "days")) {
+    setError("Start Date must be before End Date");
     return false;
-  } else if (endDate.isSameOrAfter(moment(), 'days')) {
-    setError('End Date must be before today');
+  } else if (endDate.isSameOrAfter(moment(), "days")) {
+    setError("End Date must be before today");
     return false;
   } else if (daysBetween > 60) {
-    setError('Max duration is 60 days');
+    setError("Max duration is 60 days");
     return false;
   } else {
     return true;
@@ -48,15 +48,15 @@ export default function Dashboard({
   const { pathname } = useLocation();
 
   const handleOnClickFind = async () => {
-    if (type === 'date' && !isDateValid(startDate, endDate, setError)) {
+    if (type === "date" && !isDateValid(startDate, endDate, setError)) {
       return;
     }
 
-    const from = startDate.format('DD-MM-YYYY');
-    const to = endDate.format('DD-MM-YYYY');
+    const from = startDate.format("DD-MM-YYYY");
+    const to = endDate.format("DD-MM-YYYY");
 
     switch (pathname) {
-      case '/byCountry':
+      case "/":
         setIsLoading(true);
 
         try {
@@ -73,7 +73,7 @@ export default function Dashboard({
         }
         break;
 
-      case '/compare':
+      case "/compare":
         setIsLoading(true);
 
         try {
@@ -90,7 +90,7 @@ export default function Dashboard({
         }
         break;
 
-      case '/top10':
+      case "/top10":
         setIsLoading(true);
 
         try {
@@ -115,18 +115,18 @@ export default function Dashboard({
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         gap: 16,
       }}
     >
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "flex-start",
           gap: 32,
         }}
       >
@@ -141,24 +141,24 @@ export default function Dashboard({
           setMonth={setMonth}
           setError={setError}
         />
-        {pathname !== '/top10' && (
+        {pathname !== "/top10" && (
           <CountrySelect country={country} setCountry={setCountry} />
         )}
-        {pathname === '/compare' && (
+        {pathname === "/compare" && (
           <CountrySelect country={country2} setCountry={setCountry2} />
         )}
-        {pathname === '/top10' && (
+        {pathname === "/top10" && (
           <CriteriaSelect criteria={criteria} setCriteria={setCriteria} />
         )}
       </Box>
 
       <Button
         style={{
-          backgroundColor: 'blueviolet',
-          color: 'white',
-          fontWeight: 'bold',
+          backgroundColor: "blueviolet",
+          color: "white",
+          fontWeight: "bold",
         }}
-        variant='contained'
+        variant="contained"
         onClick={handleOnClickFind}
       >
         {/* <Button variant='contained' onClick={handleOnClickFind}> */}
