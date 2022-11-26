@@ -129,16 +129,6 @@ router.get('/statistic-top', async (req, res, next) => {
   ));
 })
 
-router.get("/statistic-top", (req, res, next) => {
-  const { from, to } = req.query;
-  var fromDate = moment(from, "DD/MM/YYYY");
-  var toDate = moment(to, "DD/MM/YYYY");
-  while (toDate.diff(fromDate, "days", true) >= 0) {
-    fromDate.add(1, "day");
-  }
-  res.status(200).send("done");
-});
-
 router.get("/statistic-data/v2", async (req, res) => {
   const response = await ctrl.filterByCountry(req);
   res.status(200).send(JSON.stringify(response));
