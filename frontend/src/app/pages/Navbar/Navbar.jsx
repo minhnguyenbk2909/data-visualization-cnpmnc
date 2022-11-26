@@ -104,11 +104,11 @@ export const Navbar = () => {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-      }} */}
+      }}
     >
       <Tab label="By Country" to="/" navigate={navigate} />
       <Tab label="Top 10" to="/top10" navigate={navigate} />
-      <Tab label="Compare" to="/compare" navigate={navigate} />
+      <Tab label="Compare" to="/compare" navigate={navigate} /> */}
     </Box>
   );
 };
