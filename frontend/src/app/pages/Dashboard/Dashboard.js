@@ -111,7 +111,7 @@ export default function Dashboard({
           } = await axios.get(
             `/api/statistic-top?from=${from}&to=${to}&criteria=${criteria}`
           )
-          
+
           setTopTenData(statisticData);
           setIsLoading(false);
         } catch (error) {
@@ -154,7 +154,9 @@ export default function Dashboard({
           setMonth={setMonth}
           setError={setError}
         />
-        <CountrySelect country={country} setCountry={setCountry} />
+        {pathname !== '/top10' && (
+          <CountrySelect country={country} setCountry={setCountry} />
+        )}
         {pathname === '/compare' && (
           <CountrySelect country={country2} setCountry={setCountry2} />
         )}

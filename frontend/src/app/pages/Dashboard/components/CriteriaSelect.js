@@ -22,7 +22,7 @@ export const CriteriaSelect = ({ criteria, setCriteria }) => {
 
     return (
         <FormControl style={{ minWidth: 120 }}>
-            <InputLabel>Country</InputLabel>
+            <InputLabel>Criteria</InputLabel>
             <Select value={criteria} label='Criteria' onChange={handleChange}>
                 {criteriaList.map((criterium) => (
                     <MenuItem value={criterium.value} key={criterium.value}>
