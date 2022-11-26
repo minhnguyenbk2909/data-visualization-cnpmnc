@@ -32,7 +32,6 @@ const convertStatisticDataToChartDatasets = (topTenData, criteria) => {
     ],
   };
 
-  console.log(convertedData);
   return convertedData;
 };
 

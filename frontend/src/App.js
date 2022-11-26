@@ -24,7 +24,7 @@ function App() {
   const [country2, setCountry2] = useState("Thailand");
   const [criteria, setCriteria] = useState("death");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
 
   // Server state
   const [statisticData, setStatisticData] = useState([]);
@@ -75,7 +75,7 @@ function App() {
         <Typography
           style={{ color: "red", fontWeight: 700, textAlign: "center" }}
         >
-          Không hợp lệ
+          {error}
         </Typography>
       )}
 
