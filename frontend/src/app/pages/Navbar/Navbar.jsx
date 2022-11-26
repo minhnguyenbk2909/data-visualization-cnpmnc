@@ -1,7 +1,9 @@
-import { Box, Typography, Button } from '@material-ui/core';
-import { useNavigate } from 'react-router-dom';
+import { Box, Typography } from '@material-ui/core';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Tab = ({ label, to, navigate }) => {
+  const { pathname } = useLocation();
+
   return (
     <Box
       onClick={() => navigate(to)}
@@ -10,7 +12,7 @@ const Tab = ({ label, to, navigate }) => {
         height: 50,
         borderLeft: '1px solid #9191cc',
         borderRight: '1px solid #9191cc',
-        backgroundColor: '#b6b6ff',
+        backgroundColor: pathname === to ? '#9191cc' : '#b6b6ff',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',

@@ -1,6 +1,5 @@
 import {
   Box,
-  Typography,
   Table,
   TableBody,
   TableCell,
@@ -9,37 +8,7 @@ import {
 } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
 
-export const Compare = ({
-  type,
-  startDate,
-  endDate,
-  country,
-  country2,
-  isLoading,
-  setIsLoading,
-  compareData,
-}) => {
-  /*
-    compareData: {
-      from: DD-MM-YYYY,
-      to: DD-MM-YYYY,
-      data: {
-        country1: {
-          countryName,
-          newCase,
-          death,
-          recover,
-        },
-        country2: {
-          countryName,
-          newCase,
-          death,
-          recover,
-        }
-      }
-    }
-  */
-
+export const Compare = ({ country, country2, isLoading, compareData }) => {
   const convertCompareDataToChartDatasets = (compareData) => {
     const countryNames = Object.keys(compareData.data);
 
@@ -94,9 +63,9 @@ export const Compare = ({
   const tableConfigs = {
     columns: [
       { label: 'Country', field: 'countryName', width: 200, color: '#000000' },
-      { label: 'New Cases', field: 'newCase', width: 160, color: '#0000af' },
-      { label: 'Deaths', field: 'death', width: 160, color: '#af4000' },
-      { label: 'Recovered', field: 'recover', width: 160, color: '#00af00' },
+      { label: 'New Cases', field: 'newCase', width: 140, color: '#0000af' },
+      { label: 'Deaths', field: 'death', width: 140, color: '#af4000' },
+      { label: 'Recovered', field: 'recover', width: 140, color: '#00af00' },
     ],
     rows: isChartDataEmpty ? [] : Object.keys(compareData.data), // ['country1', 'country2']
   };
@@ -159,57 +128,62 @@ export const Compare = ({
         Compare COVID Cases in {country} & {country2}
       </Box>
 
-      <Table style={{ width: 'fit-content', backgroundColor: '#f5f5ff' }}>
-        <TableHead>
-          <TableRow>
-            {tableConfigs.columns.map((tableColumn) => {
+      {isLoading ? (
+        'Loading...'
+      ) : isChartDataEmpty ? (
+        'No data to show!'
+      ) : (
+        <Table style={{ width: 'fit-content', backgroundColor: '#f5f5ff' }}>
+          <TableHead>
+            <TableRow>
+              {tableConfigs.columns.map((tableColumn) => {
+                return (
+                  <TableCell
+                    align='center'
+                    style={{
+                      width: tableColumn.width,
+                      fontWeight: 700,
+                      border: '1px solid blue',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    {tableColumn.label}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {tableConfigs.rows.map((tableRow) => {
+              const countryName = tableRow;
               return (
-                <TableCell
-                  align='center'
-                  style={{
-                    width: tableColumn.width,
-                    fontWeight: 700,
-                    border: '1px solid blue',
-                    boxSizing: 'border-box',
-                  }}
-                >
-                  {tableColumn.label}
-                </TableCell>
+                <TableRow>
+                  {tableConfigs.columns.map((tableColumn) => {
+                    return (
+                      <TableCell
+                        align='center'
+                        style={{
+                          width: tableColumn.width,
+                          color: tableColumn.color,
+                          border: '1px solid blue',
+                          boxSizing: 'border-box',
+                        }}
+                      >
+                        {compareData.data[countryName][tableColumn.field]}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
               );
             })}
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {tableConfigs.rows.map((tableRow) => {
-            // 'Vietnam' or 'Thailand'
-            const countryName = tableRow;
-            return (
-              <TableRow>
-                {tableConfigs.columns.map((tableColumn) => {
-                  return (
-                    <TableCell
-                      align='center'
-                      style={{
-                        width: tableColumn.width,
-                        color: tableColumn.color,
-                        border: '1px solid blue',
-                        boxSizing: 'border-box',
-                      }}
-                    >
-                      {compareData.data[countryName][tableColumn.field]}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+          </TableBody>
+        </Table>
+      )}
 
       <Box
         sx={{
-          width: '90%',
+          width: '60%',
           padding: 20,
           border: '1px solid blue',
           borderRadius: 4,

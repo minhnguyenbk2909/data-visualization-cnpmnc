@@ -1,34 +1,20 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import DateRangePicker from './components/DateRangePicker';
-import { Box } from '@material-ui/core';
-import { CountrySelect } from './components/CountrySelect';
 import { useLocation } from 'react-router-dom';
+import { Box } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import moment from 'moment';
+import DateRangePicker from './components/DateRangePicker';
+import { CountrySelect } from './components/CountrySelect';
 import { CriteriaSelect } from './components/CriteriaSelect';
 
-const useStyles = makeStyles({
-  root: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    border: 0,
-    borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
-    height: 48,
-    padding: '0 30px',
-  },
-});
-
-const isDateValid = (startDate, endDate, setError) => {
+const isDateValid = (startDate, endDate) => {
   const daysBetween = endDate.diff(startDate, 'days');
   if (
     startDate.isSameOrAfter(endDate, 'days') ||
     endDate.isSameOrAfter(moment(), 'days') ||
-    daysBetween > 30
+    daysBetween > 60
   ) {
-    setError(true);
     return false;
   } else {
     return true;
@@ -59,12 +45,27 @@ export default function Dashboard({
   const { pathname } = useLocation();
 
   const handleOnClickFind = async () => {
-    if (!isDateValid(startDate, endDate, setError)) {
+    if (type === 'date' && !isDateValid(startDate, endDate)) {
+      setError(true);
       return;
     }
 
-    const from = startDate.format('DD-MM-YYYY');
-    const to = endDate.format('DD-MM-YYYY');
+    let from, to;
+
+    switch (type) {
+      case 'date':
+        from = startDate.format('DD-MM-YYYY');
+        to = endDate.format('DD-MM-YYYY');
+        break;
+
+      case 'month':
+        from = month.startOf('month').format('DD-MM-YYYY');
+        to = month.endOf('month').format('DD-MM-YYYY');
+        break;
+
+      default:
+        break;
+    }
 
     switch (pathname) {
       case '/byCountry':
@@ -110,15 +111,14 @@ export default function Dashboard({
             data: { statisticData },
           } = await axios.get(
             `/api/statistic-top?from=${from}&to=${to}&criteria=${criteria}`
-          )
-          
+          );
+
           setTopTenData(statisticData);
           setIsLoading(false);
         } catch (error) {
           console.error(error);
         }
         break;
-
 
       default:
         break;
@@ -154,7 +154,9 @@ export default function Dashboard({
           setMonth={setMonth}
           setError={setError}
         />
-        <CountrySelect country={country} setCountry={setCountry} />
+        {pathname !== '/top10' && (
+          <CountrySelect country={country} setCountry={setCountry} />
+        )}
         {pathname === '/compare' && (
           <CountrySelect country={country2} setCountry={setCountry2} />
         )}
@@ -163,7 +165,11 @@ export default function Dashboard({
         )}
       </Box>
 
-      <Button variant='contained' onClick={handleOnClickFind}>
+      <Button
+        variant='contained'
+        style={{ backgroundColor: '#b6b6ff' }}
+        onClick={handleOnClickFind}
+      >
         Show
       </Button>
     </Box>

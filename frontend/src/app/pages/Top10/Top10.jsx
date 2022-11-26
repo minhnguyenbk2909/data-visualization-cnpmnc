@@ -1,23 +1,23 @@
-import { Box } from "@material-ui/core";
-import { Bar } from "react-chartjs-2";
+import { Box } from '@material-ui/core';
+import { Bar } from 'react-chartjs-2';
 
 const convertStatisticDataToChartDatasets = (topTenData, criteria) => {
   let label;
   let borderColor;
   let backgroundColor;
 
-  if (criteria === "death") {
+  if (criteria === 'death') {
     label = 'Death';
-    borderColor = "#ff4000";
-    backgroundColor = "#ff8080";
-  } else if (criteria === "active") {
+    borderColor = '#ff4000';
+    backgroundColor = '#ff8080';
+  } else if (criteria === 'active') {
     label = 'Active';
-    borderColor = "#0000ff";
-    backgroundColor = "#8888ff";
-  } else if (criteria === "recover") {
+    borderColor = '#0000ff';
+    backgroundColor = '#8888ff';
+  } else if (criteria === 'recover') {
     label = 'Recovered';
-    borderColor = "#00ff00";
-    backgroundColor = "#88ff88";
+    borderColor = '#00ff00';
+    backgroundColor = '#88ff88';
   }
 
   const convertedData = {
@@ -36,20 +36,12 @@ const convertStatisticDataToChartDatasets = (topTenData, criteria) => {
   return convertedData;
 };
 
-export const Top10 = ({
-  type,
-  startDate,
-  endDate,
-  isLoading,
-  setIsLoading,
-  topTenData,
-  criteria,
-}) => {
+export const Top10 = ({ isLoading, topTenData, criteria }) => {
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: "top",
+        position: 'top',
       },
       title: {
         display: true,
@@ -64,23 +56,23 @@ export const Top10 = ({
     <Box
       sx={{
         paddingTop: 16,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         gap: 16,
       }}
     >
       <Box
         sx={{
-          width: "40%",
-          border: "1px solid #009df0",
+          width: '40%',
+          border: '1px solid #009df0',
           borderRadius: 4,
-          boxShadow: "0px 0px 2px #3333d3",
-          backgroundColor: "#f5f5ff",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          paddingY: "1rem",
+          boxShadow: '0px 0px 2px #3333d3',
+          backgroundColor: '#f5f5ff',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          paddingY: '1rem',
           fontSize: 18,
           fontWeight: 700,
         }}
@@ -89,19 +81,19 @@ export const Top10 = ({
       </Box>
       <Box
         sx={{
-          width: "90%",
+          width: '60%',
           padding: 20,
-          border: "1px solid blue",
+          border: '1px solid blue',
           borderRadius: 4,
-          backgroundColor: "#f5f5ff",
+          backgroundColor: '#f5f5ff',
         }}
       >
         {isLoading ? (
-          "Loading..."
+          'Loading...'
         ) : topTenData.length > 0 ? (
           <Bar options={options} data={data} />
         ) : (
-          "No data to show!"
+          'No data to show!'
         )}
       </Box>
     </Box>

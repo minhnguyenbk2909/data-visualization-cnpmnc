@@ -1,27 +1,25 @@
-import { useState, useEffect } from "react";
-import { Box } from "@material-ui/core";
-import { Line } from "react-chartjs-2";
-import axios from "axios";
+import { Box } from '@material-ui/core';
+import { Line } from 'react-chartjs-2';
 
 const convertStatisticDataToChartDatasets = (statisticData) => {
   const chartConfigs = [
     {
-      field: "newCases",
-      label: "New Cases",
-      borderColor: "#0000ff",
-      backgroundColor: "#8888ff",
+      field: 'totalCases',
+      label: 'Total Cases',
+      borderColor: '#0000ff',
+      backgroundColor: '#8888ff',
     },
     {
-      field: "deaths",
-      label: "Deaths",
-      borderColor: "#ff4000",
-      backgroundColor: "#ff8080",
+      field: 'deaths',
+      label: 'Total Deaths',
+      borderColor: '#ff4000',
+      backgroundColor: '#ff8080',
     },
     {
-      field: "recovered",
-      label: "Recovered",
-      borderColor: "#00ff00",
-      backgroundColor: "#88ff88",
+      field: 'recovered',
+      label: 'Total Recovered',
+      borderColor: '#00ff00',
+      backgroundColor: '#88ff88',
     },
   ];
 
@@ -38,23 +36,14 @@ const convertStatisticDataToChartDatasets = (statisticData) => {
   };
 };
 
-export const ByCountry = ({
-  type,
-  startDate,
-  endDate,
-  country,
-  isLoading,
-  setIsLoading,
-  statisticData,
-}) => {
+export const ByCountry = ({ country, isLoading, statisticData }) => {
   const chartData = convertStatisticDataToChartDatasets(statisticData);
-  // const [chartData, setChartData] = useState({ datasets: [] });
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: "top",
+        position: 'top',
       },
       title: {
         display: true,
@@ -76,23 +65,23 @@ export const ByCountry = ({
     <Box
       sx={{
         paddingTop: 16,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         gap: 16,
       }}
     >
       <Box
         sx={{
-          width: "40%",
-          border: "1px solid #009df0",
+          width: '40%',
+          border: '1px solid #009df0',
           borderRadius: 4,
-          boxShadow: "0px 0px 2px #3333d3",
-          backgroundColor: "#f5f5ff",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          paddingY: "1rem",
+          boxShadow: '0px 0px 2px #3333d3',
+          backgroundColor: '#f5f5ff',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          paddingY: '1rem',
           fontSize: 18,
           fontWeight: 700,
         }}
@@ -101,19 +90,19 @@ export const ByCountry = ({
       </Box>
       <Box
         sx={{
-          width: "90%",
+          width: '60%',
           padding: 20,
-          border: "1px solid blue",
+          border: '1px solid blue',
           borderRadius: 4,
-          backgroundColor: "#f5f5ff",
+          backgroundColor: '#f5f5ff',
         }}
       >
         {isLoading ? (
-          "Loading..."
+          'Loading...'
         ) : statisticData.length > 0 ? (
           <Line options={options} data={chartData} />
         ) : (
-          "No data to show!"
+          'No data to show!'
         )}
       </Box>
     </Box>
