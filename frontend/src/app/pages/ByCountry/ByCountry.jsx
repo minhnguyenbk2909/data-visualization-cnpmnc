@@ -1,25 +1,23 @@
-import { useState, useEffect } from 'react';
 import { Box } from '@material-ui/core';
 import { Line } from 'react-chartjs-2';
-import axios from 'axios';
 
 const convertStatisticDataToChartDatasets = (statisticData) => {
   const chartConfigs = [
     {
-      field: 'newCases',
-      label: 'New Cases',
+      field: 'totalCases',
+      label: 'Total Cases',
       borderColor: '#0000ff',
       backgroundColor: '#8888ff',
     },
     {
       field: 'deaths',
-      label: 'Deaths',
+      label: 'Total Deaths',
       borderColor: '#ff4000',
       backgroundColor: '#ff8080',
     },
     {
       field: 'recovered',
-      label: 'Recovered',
+      label: 'Total Recovered',
       borderColor: '#00ff00',
       backgroundColor: '#88ff88',
     },
@@ -38,17 +36,8 @@ const convertStatisticDataToChartDatasets = (statisticData) => {
   };
 };
 
-export const ByCountry = ({
-  type,
-  startDate,
-  endDate,
-  country,
-  isLoading,
-  setIsLoading,
-  statisticData,
-}) => {
+export const ByCountry = ({ country, isLoading, statisticData }) => {
   const chartData = convertStatisticDataToChartDatasets(statisticData);
-  // const [chartData, setChartData] = useState({ datasets: [] });
 
   const options = {
     responsive: true,

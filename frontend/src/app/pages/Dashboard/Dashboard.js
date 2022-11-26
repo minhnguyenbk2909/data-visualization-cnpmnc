@@ -1,12 +1,11 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import DateRangePicker from './components/DateRangePicker';
-import { Box } from '@material-ui/core';
-import { CountrySelect } from './components/CountrySelect';
 import { useLocation } from 'react-router-dom';
+import { Box } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import moment from 'moment';
+import DateRangePicker from './components/DateRangePicker';
+import { CountrySelect } from './components/CountrySelect';
 import { CriteriaSelect } from './components/CriteriaSelect';
 
 const isDateValid = (startDate, endDate) => {
@@ -14,7 +13,7 @@ const isDateValid = (startDate, endDate) => {
   if (
     startDate.isSameOrAfter(endDate, 'days') ||
     endDate.isSameOrAfter(moment(), 'days') ||
-    daysBetween > 30
+    daysBetween > 60
   ) {
     return false;
   } else {

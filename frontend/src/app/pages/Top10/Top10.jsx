@@ -36,15 +36,7 @@ const convertStatisticDataToChartDatasets = (topTenData, criteria) => {
   return convertedData;
 };
 
-export const Top10 = ({
-  type,
-  startDate,
-  endDate,
-  isLoading,
-  setIsLoading,
-  topTenData,
-  criteria,
-}) => {
+export const Top10 = ({ isLoading, topTenData, criteria }) => {
   const options = {
     responsive: true,
     plugins: {

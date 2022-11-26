@@ -1,6 +1,5 @@
 import {
   Box,
-  Typography,
   Table,
   TableBody,
   TableCell,
@@ -9,37 +8,7 @@ import {
 } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
 
-export const Compare = ({
-  type,
-  startDate,
-  endDate,
-  country,
-  country2,
-  isLoading,
-  setIsLoading,
-  compareData,
-}) => {
-  /*
-    compareData: {
-      from: DD-MM-YYYY,
-      to: DD-MM-YYYY,
-      data: {
-        country1: {
-          countryName,
-          newCase,
-          death,
-          recover,
-        },
-        country2: {
-          countryName,
-          newCase,
-          death,
-          recover,
-        }
-      }
-    }
-  */
-
+export const Compare = ({ country, country2, isLoading, compareData }) => {
   const convertCompareDataToChartDatasets = (compareData) => {
     const countryNames = Object.keys(compareData.data);
 
@@ -187,7 +156,6 @@ export const Compare = ({
 
           <TableBody>
             {tableConfigs.rows.map((tableRow) => {
-              // 'Vietnam' or 'Thailand'
               const countryName = tableRow;
               return (
                 <TableRow>

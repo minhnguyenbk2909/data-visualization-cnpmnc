@@ -16,13 +16,13 @@ function App() {
   // Client state
   const [type, setType] = useState('date'); // "date", "month"
   const [startDate, setStartDate] = useState(
-    moment('15-11-2021', 'DD-MM-YYYY')
+    moment('05-06-2021', 'DD-MM-YYYY')
   ); // moment object; format: DD-MM-YYYY
-  const [endDate, setEndDate] = useState(moment('20-11-2021', 'DD-MM-YYYY')); // moment object; format: DD-MM-YYYY
+  const [endDate, setEndDate] = useState(moment('04-07-2021', 'DD-MM-YYYY')); // moment object; format: DD-MM-YYYY
   const [month, setMonth] = useState(''); // moment object; format: MM-YYYY
   const [country, setCountry] = useState('Vietnam');
   const [country2, setCountry2] = useState('Thailand');
-  const [criteria, setCriteria] = useState('death')
+  const [criteria, setCriteria] = useState('death');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -31,6 +31,11 @@ function App() {
   const [compareData, setCompareData] = useState({});
   const [topTenData, setTopTenData] = useState([]);
 
+  useEffect(() => {
+    setStatisticData([]);
+    setCompareData({});
+    setTopTenData([]);
+  }, [country, country2, criteria]);
 
   return (
     <Box
@@ -90,17 +95,19 @@ function App() {
           }
         />
 
-        <Route path='/top10' element={
-          <Top10
-            type={type}
-            startDate={startDate}
-            endDate={endDate}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-            topTenData={topTenData}
-            criteria={criteria}
-          />
-        }
+        <Route
+          path='/top10'
+          element={
+            <Top10
+              type={type}
+              startDate={startDate}
+              endDate={endDate}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              topTenData={topTenData}
+              criteria={criteria}
+            />
+          }
         />
 
         <Route
