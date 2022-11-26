@@ -22,8 +22,8 @@ const useStyles = makeStyles({
 });
 
 const isDateValid = (startDate, endDate, setError) => {
-  const daysBetween = endDate.diff(startDate, "days");
-  console.log(startDate < endDate);
+  // const daysBetween = endDate.diff(startDate, "days");
+  // console.log(startDate < endDate);
   if (
     // startDate.isSameOrAfter(endDate, "days") ||
     // endDate.isSameOrAfter(moment(), "days") ||
