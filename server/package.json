@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --inspect ./bin/www",
-    "dev": "nodemon --inspect app.js"
+    "start": "node ./bin/www",
+    "dev": "nodemon --inspect app.js",
+    "build": ""
   },
   "dependencies": {
     "axios": "^1.1.3",
