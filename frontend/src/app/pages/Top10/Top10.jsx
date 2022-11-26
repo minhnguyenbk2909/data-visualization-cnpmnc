@@ -60,14 +60,15 @@ export const Top10 = ({ isLoading, topTenData, criteria }) => {
         flexDirection: 'column',
         alignItems: 'center',
         gap: 16,
+        marginBottom: 50
       }}
     >
       <Box
         sx={{
           width: '40%',
-          border: '1px solid #009df0',
+          border: '1px solid blue',
           borderRadius: 4,
-          boxShadow: '0px 0px 2px #3333d3',
+          boxShadow: '0px 0px 2px',
           backgroundColor: '#f5f5ff',
           display: 'flex',
           flexDirection: 'row',
