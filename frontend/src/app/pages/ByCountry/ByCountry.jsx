@@ -80,6 +80,7 @@ export const ByCountry = ({
         flexDirection: "column",
         alignItems: "center",
         gap: 16,
+        marginBottom: 50
       }}
     >
       <Box
