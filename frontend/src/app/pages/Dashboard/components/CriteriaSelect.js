@@ -8,7 +8,7 @@ export const CriteriaSelect = ({ criteria, setCriteria }) => {
     },
     {
       name: "Confirmed",
-      value: "active",
+      value: "confirmed",
     },
     {
       name: "Recovered",
