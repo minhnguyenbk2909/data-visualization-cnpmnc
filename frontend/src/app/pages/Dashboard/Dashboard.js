@@ -1,32 +1,34 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import DateRangePicker from './components/DateRangePicker';
-import { Box } from '@material-ui/core';
-import { CountrySelect } from './components/CountrySelect';
-import { useLocation } from 'react-router-dom';
-import axios from 'axios';
-import moment from 'moment';
-import { CriteriaSelect } from './components/CriteriaSelect';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import DateRangePicker from "./components/DateRangePicker";
+import { Box } from "@material-ui/core";
+import { CountrySelect } from "./components/CountrySelect";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import moment from "moment";
+import { CriteriaSelect } from "./components/CriteriaSelect";
 
 const useStyles = makeStyles({
   root: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     border: 0,
     borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
     height: 48,
-    padding: '0 30px',
+    padding: "0 30px",
   },
 });
 
 const isDateValid = (startDate, endDate, setError) => {
-  const daysBetween = endDate.diff(startDate, 'days');
+  const daysBetween = endDate.diff(startDate, "days");
+  console.log(startDate < endDate);
   if (
-    startDate.isSameOrAfter(endDate, 'days') ||
-    endDate.isSameOrAfter(moment(), 'days') ||
-    daysBetween > 30
+    // startDate.isSameOrAfter(endDate, "days") ||
+    // endDate.isSameOrAfter(moment(), "days") ||
+    // daysBetween > 30
+    startDate > endDate
   ) {
     setError(true);
     return false;
@@ -63,11 +65,11 @@ export default function Dashboard({
       return;
     }
 
-    const from = startDate.format('DD-MM-YYYY');
-    const to = endDate.format('DD-MM-YYYY');
+    const from = startDate.format("DD-MM-YYYY");
+    const to = endDate.format("DD-MM-YYYY");
 
     switch (pathname) {
-      case '/byCountry':
+      case "/":
         setIsLoading(true);
 
         try {
@@ -85,7 +87,7 @@ export default function Dashboard({
         }
         break;
 
-      case '/compare':
+      case "/compare":
         setIsLoading(true);
 
         try {
@@ -102,7 +104,7 @@ export default function Dashboard({
         }
         break;
 
-      case '/top10':
+      case "/top10":
         setIsLoading(true);
 
         try {
@@ -110,15 +112,14 @@ export default function Dashboard({
             data: { statisticData },
           } = await axios.get(
             `/api/statistic-top?from=${from}&to=${to}&criteria=${criteria}`
-          )
-          
+          );
+
           setTopTenData(statisticData);
           setIsLoading(false);
         } catch (error) {
           console.error(error);
         }
         break;
-
 
       default:
         break;
@@ -128,18 +129,18 @@ export default function Dashboard({
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         gap: 16,
       }}
     >
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "flex-start",
           gap: 32,
         }}
       >
@@ -154,16 +155,18 @@ export default function Dashboard({
           setMonth={setMonth}
           setError={setError}
         />
-        <CountrySelect country={country} setCountry={setCountry} />
-        {pathname === '/compare' && (
+        {pathname !== "/top10" && (
+          <CountrySelect country={country} setCountry={setCountry} />
+        )}
+        {pathname === "/compare" && (
           <CountrySelect country={country2} setCountry={setCountry2} />
         )}
-        {pathname === '/top10' && (
+        {pathname === "/top10" && (
           <CriteriaSelect criteria={criteria} setCriteria={setCriteria} />
         )}
       </Box>
 
-      <Button variant='contained' onClick={handleOnClickFind}>
+      <Button variant="contained" onClick={handleOnClickFind}>
         Show
       </Button>
     </Box>
