@@ -152,7 +152,8 @@ export default function Dashboard({
         )}
       </Box>
 
-      <Button variant='contained' onClick={handleOnClickFind}>
+      <Button style={{backgroundColor: 'blueviolet', color: 'white', fontWeight: 'bold'}} variant="contained" onClick={handleOnClickFind}>
+      {/* <Button variant='contained' onClick={handleOnClickFind}> */}
         Show
       </Button>
     </Box>

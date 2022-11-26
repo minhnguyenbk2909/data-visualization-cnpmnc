@@ -82,41 +82,66 @@ router.get('/statistic-top', async (req, res, next) => {
   var fromDate = moment(from, 'DD/MM/YYYY');
   var toDate = moment(to, 'DD/MM/YYYY');
 
-  if (fromDate > toDate){
+  if (fromDate > toDate) {
     res.status(200).send({
       statusCode: 2,
       statusDescription: 'Invalid date range'
     })
   }
   var field;
-  if (criteria === 'death')   field = 'Deaths';
+  if (criteria === 'death') field = 'Deaths';
   else if (criteria === 'recover') field = 'Recovered';
-  else  field = 'Active';
-  const obj = {};
-  
-  while(toDate.diff(fromDate, 'days', true) >= 0) {
-    const date = fromDate.format('MM-DD-YYYY').toString();
-    const dataFromGithub = await ctrl.getByDate(date);
+  else field = 'Confirmed';
 
-    dataFromGithub.forEach((element) => {
+
+  const obj = {}
+  if (field === 'Deaths' || field === 'Recovered') {
+    const dataFromDate = await ctrl.getByDate(fromDate.format('MM-DD-YYYY').toString())
+    const dataToDate = await ctrl.getByDate(toDate.format('MM-DD-YYYY').toString())
+    dataToDate.forEach((element) => {
       const countryName = element.Country_Region;
       const countryData = obj[`${countryName}`];
 
       if (countryData) {
-        obj[`${countryName}`] += Number( element[`${field}`] );
+        obj[`${countryName}`] += Number(element[`${field}`]);
       }
       else {
-        obj[`${countryName}`] = Number( element[`${field}`] );
+        obj[`${countryName}`] = Number(element[`${field}`]);
       }
-      
-    });
+    })
 
-    fromDate.add(1, 'day');
+    if (!fromDate.isSame(toDate)) {
+      dataFromDate.forEach((element) => {
+        const countryName = element.Country_Region;
+        obj[`${countryName}`] -= Number(element[`${field}`]);
+      });
+    }
+  }
+  else if (field === 'Confirmed') {
+    while (toDate.diff(fromDate, 'days', true) >= 0) {
+      const date = fromDate.format('MM-DD-YYYY').toString();
+      const dataFromGithub = await ctrl.getByDate(date);
+
+      dataFromGithub.forEach((element) => {
+        const countryName = element.Country_Region;
+        const countryData = obj[`${countryName}`];
+
+        if (countryData) {
+          obj[`${countryName}`] += Number(element[`${field}`]);
+        }
+        else {
+          obj[`${countryName}`] = Number(element[`${field}`]);
+        }
+
+      });
+
+      fromDate.add(1, 'day');
+    }
   }
 
   const arr = [];
   for (const [key, value] of Object.entries(obj)) {
-    arr.push({countryName: key, data: value});
+    arr.push({ countryName: key, data: value });
   }
   arr.sort((a, b) => b.data - a.data);
 
@@ -146,10 +171,10 @@ router.get("/statistic-data/v2", async (req, res) => {
 //   res.send(resData);
 // });
 
-router.get("/compare", async(req,res,next) => {
-  let {from, to, country1, country2} = req.query
+router.get("/compare", async (req, res, next) => {
+  let { from, to, country1, country2 } = req.query
 
-  if(!from || !to || !country1 || !country2)
+  if (!from || !to || !country1 || !country2)
     return res.status(400).json({
       statusCode: 3,
       statusDescription: "Invalid query"
@@ -157,21 +182,21 @@ router.get("/compare", async(req,res,next) => {
 
   const data = await ctrl.compareCountriesByRange(dayConvert(from), dayConvert(to), country1, country2)
 
-  if(data == 2) {
+  if (data == 2) {
     return res.status(400).json({
       statusCode: 2,
       statusDescription: 'Date record not exist in DB'
     })
   }
 
-  if(data == 4){
+  if (data == 4) {
     return res.status(400).json({
       statusCode: 4,
       statusDescription: 'Country record not exist in this date'
     })
   }
 
-  if(data.code && data.code == 1){
+  if (data.code && data.code == 1) {
     return res.status(400).json({
       statusCode: 1,
       statusDescription: 'Invalid country name',
@@ -185,7 +210,7 @@ router.get("/compare", async(req,res,next) => {
     data: {
       from: from,
       to: to,
-      data : data
+      data: data
     }
   })
 })
