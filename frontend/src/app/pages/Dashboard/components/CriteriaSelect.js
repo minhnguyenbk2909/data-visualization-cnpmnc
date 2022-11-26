@@ -7,7 +7,7 @@ export const CriteriaSelect = ({ criteria, setCriteria }) => {
       value: "death",
     },
     {
-      name: "Active",
+      name: "Confirmed",
       value: "active",
     },
     {
